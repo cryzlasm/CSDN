@@ -1,0 +1,127 @@
+//手动打开Mail网站  @spambog.com DomainId=101  csdntest@spambog.com;
+GET https://discard.email/ HTTP/1.1
+Accept: text/html, application/xhtml+xml, */*
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Accept-Encoding: gzip, deflate
+Host: discard.email
+Connection: Keep-Alive
+
+
+//返回信息
+HTTP/1.1 200 OK
+Server: nginx/1.10.1
+Date: Thu, 22 Sep 2016 13:25:59 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Vary: Accept-Encoding
+Set-Cookie: sid=asaf2951e6vo2sgc28kipo5a47; path=/
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Strict-Transport-Security: max-age=15768000
+Content-Encoding: gzip
+
+==================================
+//打开邮箱
+POST https://discard.email/ HTTP/1.1
+Accept: text/html, application/xhtml+xml, */*
+Referer: https://discard.email/
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip, deflate
+Host: discard.email
+Content-Length: 151
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: sid=asaf2951e6vo2sgc28kipo5a47;
+
+LocalPart=csdntest&DomainType=public&DomainId=101&PrivateDomain=&Password=&LoginButton=Postfach+abrufen&CopyAndPaste=laksjdikosajo@servermaps.net+
+
+//返回信息
+HTTP/1.1 302 Found
+Server: nginx/1.10.1
+Date: Thu, 22 Sep 2016 13:28:21 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Set-Cookie: LocalPart=csdntest; expires=Wed, 21-Dec-2016 13:28:21 GMT; Max-Age=7776000
+Set-Cookie: DomainId=101; expires=Wed, 21-Dec-2016 13:28:21 GMT; Max-Age=7776000
+location: https://discard.email/inbox.htm
+Strict-Transport-Security: max-age=15768000
+
+
+//获得Cookie
+Cookie: sid=asaf2951e6vo2sgc28kipo5a47; LocalPart=csdntest; DomainId=101;
+========================================
+//设置Cookie之后跳转到这
+GET https://discard.email/inbox.htm HTTP/1.1
+Accept: text/html, application/xhtml+xml, */*
+Referer: https://discard.email/
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Accept-Encoding: gzip, deflate
+Host: discard.email
+Connection: Keep-Alive
+Cache-Control: no-cache
+Cookie: sid=asaf2951e6vo2sgc28kipo5a47; LocalPart=csdntest; DomainId=101;
+
+
+//返回信息
+HTTP/1.1 200 OK
+Server: nginx/1.10.1
+Date: Thu, 22 Sep 2016 13:31:29 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Strict-Transport-Security: max-age=15768000
+Content-Length: 41174
+
+
+//获得信息
+<div class="Head"><a href="https://discard.email/message-6184714483855760777-ee620142625b0c2de62d104ae9654106.htm">yzlong5@qq.com<br /><span class="Subject">1</span></a></div>
+=======================================
+//获取邮件内容
+GET https://discard.email/message-6184714483855760777-ee620142625b0c2de62d104ae9654106.htm HTTP/1.1
+Accept: text/html, application/xhtml+xml, */*
+Referer: https://discard.email/inbox.htm
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Accept-Encoding: gzip, deflate
+Host: discard.email
+Connection: Keep-Alive
+Cookie: sid=asaf2951e6vo2sgc28kipo5a47; LocalPart=csdntest; DomainId=101;
+
+
+//返回邮件内容
+HTTP/1.1 200 OK
+Server: nginx/1.10.1
+Date: Thu, 22 Sep 2016 13:33:36 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Vary: Accept-Encoding
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Strict-Transport-Security: max-age=15768000
+Content-Length: 40800
+
+//+邮件内容
+<div class="MessageDetails">
+<div class="Label">Empf&auml;nger:</div>
+<div class="Value">csdntest@spambog.com</div>
+<div class="Label">Absender:</div>
+<div class="Value">yzlong5@qq.com &#60;yzlong5@qq.com&#62;</div>
+<div class="Label">Gesendet am:</div>
+<div class="Value">22.09.2016 15:27:19</div>
+<div class="Label">Betreff:</div>
+<div class="Value">1</div>
+===================================

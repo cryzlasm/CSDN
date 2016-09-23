@@ -1,0 +1,22 @@
+1 在应用程序类添加一个保护权限的数据成员：
+  ULONG_PTR m_gdiplusToken;
+2 在应用程序类的实现文件包含gdi+的头文件：
+  #include <GdiPlus.h>
+3 在工程附加库加上：GdiPlus.lib
+4 然后在应用程序类的InitInstance加上下面初始化代码
+    Gdiplus::GdiplusStartupInput StartupInput;  
+    GdiplusStartup(&m_gdiplusToken,&StartupInput,NULL);  
+5    ExitInstance加上下面代码
+Gdiplus::GdiplusShutdown(m_gdiplusToken);  
+    return __super::ExitInstance();  
+
+6 使用gdi 绘制图片
+  CRect rect;//将图片显示在Picture控件内时获取控件的坐标位置
+  m_Pic.GetWindowRect(&rect);//
+  ScreenToClient(&rect);//获取的屏幕坐标转化为对话框内部的相对坐标
+
+  CDC* pDc = m_Pic.GetWindowDC();
+  Graphics graphics(pDc->m_hDC);
+  Image image(L"code.jpg", FALSE);//图片全路径+图片格式
+  Status ret = graphics.DrawImage(&image, 0, 0, rect.Width(), rect.Height());
+  ReleaseDC(pDc);

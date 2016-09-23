@@ -1,0 +1,142 @@
+<input type="hidden" name="lt" value="LT-313699-grfrNfHc6qCJm5bBx4odNyE7r9O9mz">
+<input type="hidden" name="execution" value="e2s1">
+<input type="hidden" name="_eventId" value="submit">
+
+
+
+GET https://passport.csdn.net/account/login HTTP/1.1
+Accept: text/html, application/xhtml+xml, */*
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Accept-Encoding: gzip, deflate
+Host: passport.csdn.net
+Connection: Keep-Alive
+Cookie: JSESSIONID=C0BF1B170C4042B5E3D0AB33D12E405B.tomcat1; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474544749; _ga=GA1.2.300870523.1474544781; _gat=1; JSESSIONID=C0BF1B170C4042B5E3D0AB33D12E405B.tomcat1
+
+==============================================================
+//获取登录页面
+GET https://passport.csdn.net/account/login?from=http://my.csdn.net/my/mycsdn HTTP/1.1
+Host: passport.csdn.net
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Referer: http://www.csdn.net/
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: JSESSIONID=591006399C922D5DEA6B7CC95D56FD73.tomcat1; uuid_tt_dd=2374975261751004143_20160831; __message_district_code=000000; UN=xeludukuzefo; UE="xeludukuzefo@spambog.com"; BT=1474476372627; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; JSESSIONID=591006399C922D5DEA6B7CC95D56FD73.tomcat1; LSSC=LSSC-371541-1YVXKtpqGPwWAkZ6ARZye1OchRMw2z-passport.csdn.net; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1473421396,1474470494,1474544839; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474544839; _gat=1; _ga=GA1.2.90815613.1473425003; dc_tos=odwnqf; dc_session_id=1474545794614
+
+
+//登录页面返回
+HTTP/1.1 200 OK
+Server: openresty
+Date: Thu, 22 Sep 2016 12:25:27 GMT
+Content-Type: text/html;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=20
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: no-cache
+Cache-Control: no-store
+Set-Cookie: JSESSIONID=661BC34873149235AC39802C103042F0.tomcat2; Path=/; HttpOnly
+Set-Cookie: JSESSIONID=661BC34873149235AC39802C103042F0.tomcat2
+Set-Cookie: LSSC=LSSC-270621-NaAxWcMdG7eIIiRIUeFjagaSfpy5cR-passport.csdn.net; Expires=Sat, 22-Oct-2016 12:25:25 GMT; Path=/; Secure
+Content-Encoding: gzip
+Vary: Accept-Encoding
+
+
+<input type="hidden" name="lt" value="LT-241404-yI99uulYTIUZgoVdMENYvIjyxiRUsx" />
+<input type="hidden" name="execution" value="e1s1" /> 
+<input type="hidden" name="_eventId" value="submit" /> 
+Response sent 69 bytes of Cookie data:
+	Set-Cookie: JSESSIONID=EFDA50356A4B821F8534311639F7727D.tomcat2; Path=/; HttpOnly
+
+Response sent 51 bytes of Cookie data:
+	Set-Cookie: JSESSIONID=EFDA50356A4B821F8534311639F7727D.tomcat2
+
+Response sent 120 bytes of Cookie data:
+	Set-Cookie: LSSC=LSSC-278001-WWZ6vnO6CT00tEhJOjY3VnUf0x4dig-passport.csdn.net; Expires=Sat, 22-Oct-2016 12:40:38 GMT; Path=/; Secure
+
+==================================================
+username=用户邮箱&password=密码&validateCode=验证码&lt=页面获取&execution=页面获取&_eventId=页面获取
+username=yzlong110%40163.com&password=123456&validateCode=fnooy&lt=LT-320850-0kzqday04AcOIxwddZvYndVmaCOMfm&execution=e5s2&_eventId=submit
+================================================
+//登录
+POST https://passport.csdn.net/account/login?service=http://download.csdn.net/ HTTP/1.1
+Host: passport.csdn.net
+Connection: keep-alive
+Content-Length: 138
+Cache-Control: max-age=0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Origin: https://passport.csdn.net
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded
+Referer: https://passport.csdn.net/account/login?service=http://download.csdn.net/
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: JSESSIONID=591006399C922D5DEA6B7CC95D56FD73.tomcat1; uuid_tt_dd=2374975261751004143_20160831; __message_district_code=000000; UN=xeludukuzefo; UE="xeludukuzefo@spambog.com"; BT=1474476372627; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; JSESSIONID=591006399C922D5DEA6B7CC95D56FD73.tomcat1; LSSC=LSSC-371541-1YVXKtpqGPwWAkZ6ARZye1OchRMw2z-passport.csdn.net; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1473421396,1474470494,1474544839; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474544839; _ga=GA1.2.90815613.1473425003; _gat=1; dc_tos=odwnpp; dc_session_id=1474545794614
+
+
+username=yzlong110%40163.com&password=123456&validateCode=fnooy&lt=LT-320850-0kzqday04AcOIxwddZvYndVmaCOMfm&execution=e5s2&_eventId=submit
+
+
+//伪造
+POST https://passport.csdn.net/account/login?from=http://my.csdn.net/my/mycsdn HTTP/1.1
+Host: passport.csdn.net
+Connection: keep-alive
+Cache-Control: max-age=0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Origin: https://passport.csdn.net
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded
+Referer: https://passport.csdn.net/account/login?from=http://my.csdn.net/my/mycsdn
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: JSESSIONID=EFDA50356A4B821F8534311639F7727D.tomcat2; LSSC=LSSC-278001-WWZ6vnO6CT00tEhJOjY3VnUf0x4dig-passport.csdn.net;
+
+username=xeludukuzefo%40spambog.com&password=123456&lt=LT-241404-yI99uulYTIUZgoVdMENYvIjyxiRUsx&execution=e1s1&_eventId=submit
+===================================================
+//登录成功
+POST https://passport.csdn.net/account/login?from=http://my.csdn.net/my/mycsdn HTTP/1.1
+Host: passport.csdn.net
+Connection: keep-alive
+Content-Length: 126
+Cache-Control: max-age=0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Origin: https://passport.csdn.net
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded
+Referer: https://passport.csdn.net/account/login?from=http://my.csdn.net/my/mycsdn
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: JSESSIONID=591006399C922D5DEA6B7CC95D56FD73.tomcat1; uuid_tt_dd=2374975261751004143_20160831; __message_district_code=000000; UN=xeludukuzefo; UE="xeludukuzefo@spambog.com"; BT=1474476372627; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; JSESSIONID=591006399C922D5DEA6B7CC95D56FD73.tomcat1; LSSC=LSSC-371541-1YVXKtpqGPwWAkZ6ARZye1OchRMw2z-passport.csdn.net; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1473421396,1474470494,1474544839; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474544839; _gat=1; _ga=GA1.2.90815613.1473425003; dc_tos=odwnsc; dc_session_id=1474545794614
+
+username=xeludukuzefo%40spambog.com&password=123456&lt=LT-329786-wwMUcI2dtsxTqTaBQXPpPqvtlt4ifb&execution=e6s1&_eventId=submit
+
+//成功返回
+HTTP/1.1 200 OK
+Server: openresty
+Date: Thu, 22 Sep 2016 12:29:33 GMT
+Content-Type: text/html;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: no-cache
+Cache-Control: no-store
+Set-Cookie: CASTGC=TGT-52732-Gsp5XexoaqSh9R6Je1Rx4G0Frkfg2KgrNy3BcxsDJjtVqeBHN0-passport.csdn.net; Path=/; Secure
+Set-Cookie: UserName=xeludukuzefo; Domain=.csdn.net; Path=/
+Set-Cookie: UserInfo=%2ByxI6DjDNSRJwUDKmDIEPB4wcKl7EBoAwWGWC7fuSypDScxmeHcYP8QpHEk1b1o1wurfMGPzmvh1ehxEgoGHTuPD4QlbUM24DNzSgSEBmsUAeNCYlCrV4cK%2FQrJoFvUEFmChEe0cBrhc%2BoLQxGx%2FEA%3D%3D; Domain=.csdn.net; Path=/
+Set-Cookie: UserNick=xeludukuzefo; Domain=.csdn.net; Path=/
+Set-Cookie: AU=5EF; Domain=.csdn.net; Path=/
+Set-Cookie: UN=xeludukuzefo; Domain=.csdn.net; Expires=Fri, 22-Sep-2017 12:29:31 GMT; Path=/
+Set-Cookie: UE="xeludukuzefo@spambog.com"; Version=1; Domain=.csdn.net; Max-Age=31536000; Expires=Fri, 22-Sep-2017 12:29:31 GMT; Path=/
+Set-Cookie: BT=1474547371555; Domain=.csdn.net; Expires=Fri, 22-Sep-2017 12:29:31 GMT; Path=/
+Set-Cookie: access-token=6e625ccd-8e93-4a61-becc-f24cd1bf9335; Domain=.csdn.net; Path=/
+Content-Encoding: gzip
+==================================================

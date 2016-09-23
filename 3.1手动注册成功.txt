@@ -1,0 +1,104 @@
+//第一次打开注册页面
+GET http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net HTTP/1.1
+Cache-Control: max-age=0
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: zh-CN,zh;q=0.8
+Host: passport.csdn.net
+Referer: http://passport.csdn.net/account/mobileregister?action=mobileRegister
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Connection: Keep-Alive
+
+//得到COOKIE
+HTTP/1.1 200 OK
+Server: openresty
+Date: Wed, 21 Sep 2016 15:15:27 GMT
+Content-Type: text/html;charset=UTF-8
+Content-Length: 5960
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Set-Cookie: JSESSIONID=FDE5C102EFD74648C7DC2D54FA199367.tomcat1; Path=/; HttpOnly
+Content-Language: zh-CN
+Vary: Accept-Encoding
+========================================================================================
+
+//生成Cookie
+时间戳，时间戳多三位
+_ga=GA1.2.231246199.1474475676; _gat=1; dc_tos=odv45b; dc_session_id=1474475676316
+
+========================================================================================
+//获取COOKIE
+GET http://dc.csdn.net/track?7348=&user_name=&x-acl-token=status_js_dkuyqthzbajmncbsb_token&pid=passport&oid=&referrer=http%3A%2F%2Fpassport.csdn.net%2Faccount%2Fmobileregister%3Faction%3DmobileRegisterView%26service%3Dhttp%253A%252F%252Fwww.csdn.net%252F&tos=-86463369284150&session_id=1474475676316 HTTP/1.1
+Accept: image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5
+Referer: http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net/
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Accept-Encoding: gzip, deflate
+Host: dc.csdn.net
+Connection: Keep-Alive
+Cookie: _ga=GA1.2.231246199.1474475676; _gat=1; dc_tos=odv45b; dc_session_id=1474475676316
+
+//得到Cookie
+HTTP/1.1 200 OK
+Server: openresty
+Date: Wed, 21 Sep 2016 16:36:11 GMT
+Content-Type: text/plain;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Set-Cookie: uuid_tt_dd=-2985315754357538249_20160922;Path=/;Domain=csdn.net;Expires=Sat, 19-Sep-2026 16:36:11 GMT
+Expires: Thu, 01-Jan-1970 00:00:00 GMT
+Set-Cookie: dc_session_id=1474475676316;Path=/;Domain=csdn.net;Expires=Wed, 21-Sep-2016 17:06:11 GMT
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET,POST
+Content-Encoding: gzip
+
+Cookie: JSESSIONID=FDE5C102EFD74648C7DC2D54FA199367.tomcat1;_ga=GA1.2.231246199.1474475676; _gat=1; dc_tos=odv45b; dc_session_id=1474475676316; uuid_tt_dd=-2985315754357538249_20160922
+========================================================================================
+//刷新验证码
+GET http://passport.csdn.net/ajax/verifyhandler.ashx?rand=1474475862 HTTP/1.1
+Accept: image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5
+Referer: http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net/
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Accept-Encoding: gzip, deflate
+Host: passport.csdn.net
+Connection: Keep-Alive
+Cookie: JSESSIONID=FDE5C102EFD74648C7DC2D54FA199367.tomcat1; _ga=GA1.2.231246199.1474475676; _gat=1; dc_tos=odv45b; dc_session_id=1474475676316; uuid_tt_dd=-2985315754357538249_20160922
+
+//重新设置Cookie
+HTTP/1.1 200 OK
+Server: openresty
+Date: Wed, 21 Sep 2016 16:30:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=20
+Pragma: No-cache
+Cache-Control: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Set-Cookie: JSESSIONID=1168B72019DF578A4674995C311AA8C8.tomcat1; Path=/; HttpOnly
+Content-Length: 1395
+
+========================================================================================
+//提交表单
+POST http://passport.csdn.net/account/register?action=saveUser&isFrom=false HTTP/1.1
+Accept: text/html, application/xhtml+xml, */*
+Referer: http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip, deflate
+Host: passport.csdn.net
+Connection: Keep-Alive
+Pragma: no-cache
+Cookie: JSESSIONID=FDE5C102EFD74648C7DC2D54FA199367.tomcat1; _ga=GA1.2.231246199.1474475676; _gat=1; dc_tos=odv45b; dc_session_id=1474475676316; uuid_tt_dd=-2985315754357538249_20160922
+
+fromUrl=http%3A%2F%2Fwww.csdn.net&userName=xeludukuzefo&email=xeludukuzefo@spambog.com&password=123456&confirmpassword=123456&validateCode=ncb2i&agree=on
+
+
+
+fromUrl=http://www.csdn.net&userName=用户名&email=邮箱&password=密码&confirmpassword=重复密码&validateCode=验证码&agree=同意
+fromUrl=http://www.csdn.net&userName=zibicugediro&email=zibicugediro@spambog.com&password=123456&confirmpassword=123456&validateCode=pgvru&agree=on
+fromUrl=http%3A%2F%2Fwww.csdn.net&userName=kujacazijito&email=kujacazijito@spambog.com&password=123456&confirmpassword=123456&validateCode=pgvru&agree=on
+========================================================================================

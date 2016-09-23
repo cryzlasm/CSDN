@@ -1,0 +1,68 @@
+Cookie: _ga=GA1.2.1127034466.1474471301; _gat=1
+
+
+JSESSIONID=FC53F9CE114A3D9C37B796164D846F15.tomcat1; _ga=GA1.2.1127034466.1474471301; _gat=1
+
+Cookie: _ga=GA1.2.1127034466.1474471301; _gat=1; dc_tos=odv1c5; dc_session_id=1474471301813
+
+
+	Set-Cookie: uuid_tt_dd=4998997215526340229_20160921;Path=/;Domain=csdn.net;Expires=Sat, 19-Sep-2026 15:21:54 GMT
+	Set-Cookie: dc_session_id=1474471301813;Path=/;Domain=csdn.net;Expires=Wed, 21-Sep-2016 15:51:54 GMT
+
+JSESSIONID=FC53F9CE114A3D9C37B796164D846F15.tomcat1; _ga=GA1.2.1127034466.1474471301; _gat=1; dc_tos=odv1c5; dc_session_id=1474471301813
+
+
+Cookie: JSESSIONID=FC53F9CE114A3D9C37B796164D846F15.tomcat1; _ga=GA1.2.1127034466.1474471301; _gat=1; dc_tos=odv1c5; dc_session_id=1474471301813; uuid_tt_dd=4998997215526340229_20160921
+
+	Set-Cookie: JSESSIONID=A9FFDB1C3FA53C7D23428E5322C7EC07.tomcat1; Path=/; HttpOnly
+
+Cookie: JSESSIONID=A9FFDB1C3FA53C7D23428E5322C7EC07.tomcat1; _ga=GA1.2.1127034466.1474471301; dc_tos=odv1c5; dc_session_id=1474471301813; uuid_tt_dd=4998997215526340229_20160921
+
+
+.时间戳
+ga=GA1.2.231246199.1474474943; _gat=1
+
+fromUrl=http://www.csdn.net&userName=用户名&email=邮箱&password=密码&confirmpassword=重复密码&validateCode=验证码&agree=同意
+fromUrl=http://www.csdn.net&userName=zibicugediro&email=zibicugediro@spambog.com&password=123456&confirmpassword=123456&validateCode=pgvru&agree=on
+fromUrl=http%3A%2F%2Fwww.csdn.net&userName=kujacazijito&email=kujacazijito@spambog.com&password=123456&confirmpassword=123456&validateCode=pgvru&agree=on
+
+
+//请求验证码，会换COOKIE
+GET http://passport.csdn.net/ajax/verifyhandler.ashx?rand=1474473672 HTTP/1.1
+Accept: image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5
+Referer: http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Accept-Encoding: gzip, deflate
+Host: passport.csdn.net
+Connection: Keep-Alive
+Cookie: JSESSIONID=FC53F9CE114A3D9C37B796164D846F15.tomcat1; _ga=GA1.2.1127034466.1474471301; dc_tos=odv1c5; dc_session_id=1474471301813; uuid_tt_dd=4998997215526340229_20160921
+
+
+//验证验证码
+GET http://passport.csdn.net/account/register?action=validateCode&validateCode=jqhfj HTTP/1.1
+Host: passport.csdn.net
+Connection: keep-alive
+Accept: */*
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Referer: http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: JSESSIONID=58DB7C3E09EAC8C690558F73A7FC85BB.tomcat1; _ga=GA1.2.1127034466.1474471301; dc_tos=odv1c5; dc_session_id=1474471301813; uuid_tt_dd=4998997215526340229_20160921
+
+//请求验证码之后的COOKIE
+POST http://passport.csdn.net/account/register?action=saveUser&isFrom=false HTTP/1.1
+Accept: text/html, application/xhtml+xml, */*
+Referer: http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip, deflate
+Host: passport.csdn.net
+Content-Length: 153
+Connection: Keep-Alive
+Pragma: no-cache
+Cookie: JSESSIONID=58DB7C3E09EAC8C690558F73A7FC85BB.tomcat1; _ga=GA1.2.1127034466.1474471301; dc_tos=odv1c5; dc_session_id=1474471301813; uuid_tt_dd=4998997215526340229_20160921
+
+fromUrl=http%3A%2F%2Fwww.csdn.net&userName=kujacazijito&email=kujacazijito@spambog.com&password=123456&confirmpassword=123456&validateCode=jqhfj&agree=on
