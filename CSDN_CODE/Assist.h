@@ -40,6 +40,27 @@
 #define MAP std::map
 #endif
 
+
+//============================================================
+#ifndef __ZSTREAM_H__
+#define __ZSTREAM_H__
+
+//#define ZLIB_WINAPI
+#include "zlib.h"
+#include "zconf.h"
+#pragma comment(lib, "zdll.lib")
+
+
+
+// #ifdef _DEBUG
+// #pragma comment(lib, "gzip/zlib/lib/zlibstat_d.lib")
+// #else
+// #pragma comment(lib, "gzip/zlib/lib/zlibstat_r.lib")
+// #endif //#ifdef _DEBUG
+
+#endif //#ifndef __ZSTREAM_H__
+//============================================================
+
 class CAssist  
 {
 public:
@@ -83,8 +104,139 @@ public:
     //字符串到哈希表
     INLINE BOOL CookieToMap(tstring strCookie, MAP<tstring, tstring>& CookieMap);
 
+    //用于存放Cookie的Map
     MAP<tstring, tstring> m_CookieMap;
+
+
+    //Zlib Gzip
+    INLINE BOOL httpgzdecompress(BYTE *zdata, DWORD nzdata,                 
+                                 BYTE *data, DWORD *ndata);
+    INLINE BOOL HttpGzDecompress(BYTE *zdata, DWORD nzdata, std::string& outstr);
+
+    //chunked
+    INLINE std::string ParseChunk(std::string& input);
 };
+
+INLINE std::string CAssist::ParseChunk(std::string&input)
+{
+    char* pdata = (char*)input.c_str();
+    char* pdataend = pdata + input.size();
+    char* pchunkflag = strstr(pdata, "Transfer-Encoding: chunked");
+    if (!pchunkflag)
+        return input;
+    char* pStart = strstr(pdata,"\r\n\r\n");
+    std::string result = "";
+    if ( pStart && ( pStart += 4) < pdataend)
+    {
+        char* pEnd = 0;
+        do{
+            pEnd = strstr( pStart, "\r\n");
+            if (pEnd)
+            {
+                std::string hexsize(pStart);
+                hexsize = hexsize.substr(0, pEnd - pStart);
+                char* str;
+                long lSize = strtol( hexsize.c_str(), &str, 16);
+                if ( !lSize) 
+                    break;
+
+                if ( pEnd + 2 + lSize < pdataend )
+                {
+                    pEnd += 2;
+                    result.append( input.substr( pEnd - pStart, lSize ) );
+                    pStart = pEnd + lSize;
+                }
+                else
+                    break;
+            }
+            else
+                break;
+        }while(pStart && pEnd);
+    }
+    return result;
+}
+
+INLINE BOOL CAssist::httpgzdecompress(BYTE *zdata, DWORD nzdata,                 
+                                  BYTE *data, DWORD *ndata)
+{
+    int err = 0;
+    z_stream d_stream = {0}; /* decompression stream */
+    static char dummy_head[2] = 
+    {
+        0x8 + 0x7 * 0x10,
+            (((0x8 + 0x7 * 0x10) * 0x100 + 30) / 31 * 31) & 0xFF,
+    };
+    d_stream.zalloc = (alloc_func)0;
+    d_stream.zfree = (free_func)0;
+    d_stream.opaque = (voidpf)0;
+    d_stream.next_in  = zdata;
+    d_stream.avail_in = 0;
+    d_stream.next_out = data;
+    if(inflateInit2(&d_stream, 47) != Z_OK) 
+        return FALSE;
+
+    while (d_stream.total_out < *ndata && d_stream.total_in < nzdata) 
+    {
+        d_stream.avail_in = d_stream.avail_out = 1; /* force small buffers */
+        if((err = inflate(&d_stream, Z_NO_FLUSH)) == Z_STREAM_END) 
+            break;
+
+        if(err != Z_OK )
+        {
+            if(err == Z_DATA_ERROR)
+            {
+                d_stream.next_in = (Bytef*) dummy_head;
+                d_stream.avail_in = sizeof(dummy_head);
+                if((err = inflate(&d_stream, Z_NO_FLUSH)) != Z_OK) 
+                {
+                    return FALSE;
+                }
+            }
+            else return FALSE;
+        }
+    }
+    if(inflateEnd(&d_stream) != Z_OK) 
+        return FALSE;
+    *ndata = d_stream.total_out;
+    return TRUE;
+}
+
+INLINE BOOL CAssist::HttpGzDecompress(BYTE *zdata, DWORD nzdata, std::string& outstr)
+{
+    int nTimes = 4;
+    uLong uReqLen = nzdata, realLen = 0;
+    int ret = -1;
+    char *pDstBuffer = NULL;
+    do 
+    {
+        uReqLen *= nTimes;
+        if (pDstBuffer) 
+            delete [] pDstBuffer;
+
+        pDstBuffer = new char[uReqLen];
+        if (!pDstBuffer)
+        {
+            ret = FALSE;
+            break;
+        }
+        ZeroMemory(pDstBuffer, uReqLen);
+        realLen = uReqLen;
+        
+        ret = httpgzdecompress(zdata, nzdata, (BYTE*)pDstBuffer, &realLen);
+        nTimes += 2;
+        
+    } while (ret >= 0 && realLen >= uReqLen);
+    
+    if (ret < 0 || realLen <= 0)
+    {
+        if (pDstBuffer) delete [] pDstBuffer;
+        return FALSE;
+    }
+    
+    pDstBuffer[realLen] = 0;
+    outstr = pDstBuffer;
+    return TRUE;
+}
 
 //获得Cookie，返回的Header后的Body
 INLINE tstring CAssist::GetCookieString(tstring strRspHeader, MAP<tstring, tstring>& CookieMap, BOOL bAllGet)

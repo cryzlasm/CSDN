@@ -57,12 +57,6 @@ BOOL CCSDNApp::InitInstance()
     
 
 	CCSDNDlg dlg;
-
-    //≥ı ºªØGDI
-    Gdiplus::GdiplusStartupInput StartupInput;  
-    GdiplusStartup(&dlg.m_CodeDlg.m_gdiplusToken, &StartupInput, NULL);
-
-    
 	m_pMainWnd = &dlg;
 	int nResponse = dlg.DoModal();
 	if (nResponse == IDOK)

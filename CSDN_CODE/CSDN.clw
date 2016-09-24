@@ -13,9 +13,9 @@ Class2=CCSDNDlg
 Class3=CAboutDlg
 
 ResourceCount=4
-Resource1=IDD_CSDN_DIALOG
+Resource1=IDD_ABOUTBOX
 Resource2=IDR_MAINFRAME
-Resource3=IDD_ABOUTBOX
+Resource3=IDD_CSDN_DIALOG
 Class4=CGetCodeDlg
 Resource4=IDD_DLG_GET_CODE
 
@@ -67,7 +67,7 @@ Class=CGetCodeDlg
 ControlCount=4
 Control1=IDOK,button,1342242817
 Control2=IDC_STATIC,static,1342308865
-Control3=IDC_STATIC_GET_CODE,static,1342177287
+Control3=IDC_STATIC_GET_CODE,static,1342177294
 Control4=IDC_EDIT_GET_CODE,edit,1350631553
 
 [CLS:CGetCodeDlg]

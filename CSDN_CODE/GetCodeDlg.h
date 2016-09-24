@@ -11,10 +11,13 @@
 // CGetCodeDlg dialog
 
 #pragma comment(lib, "GdiPlus.lib")
-#define ULONG_PTR ULONG
 
-#include <GdiPlus.h>
-using namespace Gdiplus;
+#ifndef ULONG_PTR  
+#define ULONG_PTR unsigned long* 
+#endif
+
+// #include <GdiPlus.h>
+// using namespace Gdiplus;
 
 #include "Assist.h"
 
@@ -30,24 +33,28 @@ public:
     //图片缓冲区长度
     DWORD   m_dwDataLen;
 
-    //设置图片信息
-    BOOL SetPicData(IWinHttpRequestPtr& pObj);
-    
-    BOOL SetPicData(LPVOID pSrc, DWORD dwLen);
+    //是否为原图片 尺寸
+    BOOL m_bOriginalSize;
 
-    BOOL SetPicData(CString strFileName);
+    //设置图片信息
+    BOOL SetPicData(IWinHttpRequestPtr& pObj, BOOL OriginalSize = TRUE);    //通过Request获得数据
+    
+    BOOL SetPicData(LPVOID pSrc, DWORD dwLen, BOOL OriginalSize = TRUE);    //通过字符串和长度设置
+
+    BOOL SetPicData(CString strFileName, BOOL OriginalSize = TRUE);         //通过文件名
 
 
     //文件名
     CString m_strFile;
 
     //显示图片
-    BOOL ShowPicInMem();
+    BOOL ShowPicInMem(int x = 0, int y = 0);
 
-    BOOL ShowPicInFile();
+    BOOL ShowPicInFile(int x = 0, int y = 0);
 
-    BOOL bIsShowFromFile;
-    ULONG_PTR m_gdiplusToken;
+    //是否从文件读取Pic数据
+    BOOL m_bIsShowFromFile;
+
 // Dialog Data
 	//{{AFX_DATA(CGetCodeDlg)
 	enum { IDD = IDD_DLG_GET_CODE };
@@ -78,8 +85,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-    //ULONG_PTR m_gdiplusToken;
-    //Gdiplus::GdiplusStartupInput m_StartupInput;  
+//     ULONG_PTR m_gdiplusToken;
+//     Gdiplus::GdiplusStartupInput m_StartupInput;  
     
 };
 

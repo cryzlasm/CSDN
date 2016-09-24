@@ -25,7 +25,12 @@ CGetCodeDlg::CGetCodeDlg(CWnd* pParent /*=NULL*/)
     m_pMemData = NULL;
     m_dwDataLen = 0;
     m_strFile = TEXT("");
-    bIsShowFromFile = FALSE;
+    m_bIsShowFromFile = FALSE;
+
+    //初始化GDI
+    //GdiplusStartup(&m_gdiplusToken, &m_StartupInput, NULL);
+    
+    m_bOriginalSize = FALSE;
 }
 
 
@@ -53,162 +58,303 @@ void CGetCodeDlg::OnOK()
 {
 	// TODO: Add extra validation here
 	
-	//CDialog::OnOK();
+	CDialog::OnOK();
 }
 
-BOOL CGetCodeDlg::ShowPicInMem()
+BOOL CGetCodeDlg::ShowPicInMem(int x, int y)
 {
-    CRect rect;//将图片显示在Picture控件内时获取控件的坐标位置
-    m_GetCodeCtl.GetWindowRect(&rect);//
-    ScreenToClient(&rect);//获取的屏幕坐标转化为对话框内部的相对坐标
-
-    //申请全局空间
-    HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE, m_dwDataLen);
-    if(hGlobal == NULL)
-        return FALSE;
-
-    //解锁并用pData指向
-    void *pData = GlobalLock(hGlobal);
-    if(pData == NULL)
-        return FALSE;
+    IStream *pStream = NULL; 
+    CFileStatus fstatus;
+    CFile file;
     
-    //拷贝图片数据到pData
-    memcpy(pData, m_pMemData, m_dwDataLen);
+    //打开文件并检测文件的有效性   
+    //有数据，且数据长度不为0
+    if (m_pMemData != NULL && m_dwDataLen > 0)     
+    {        
+        //申请全局空间
+        HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE, m_dwDataLen);        
+        LPVOID pvData = NULL;         
+        if (hGlobal != NULL)        
+        {            
+            //加锁全局空间
+            pvData = GlobalLock(hGlobal);            
+            if (pvData != NULL)           
+            {          
+                //MemCpy 操作全局空间
+                memcpy(pvData, m_pMemData, m_dwDataLen);    
+                
+                //解锁全局空间
+                GlobalUnlock(hGlobal);           
+                
+                //通过全局空间创建一个Stream
+                CreateStreamOnHGlobal(hGlobal, TRUE, &pStream);     
+            }     
+        } 
+    }    
+    else   
+    {   
+        return FALSE;  
+    }
     
-    //解锁
-    GlobalUnlock(hGlobal);
-    //if(!GlobalUnlock(hGlobal))
-    //    return FALSE;
+    //获得DC
+    //CDC* pDC = m_GetCodeCtl.GetDC();
+    CWnd* pWnd = GetDlgItem(IDC_STATIC_GET_CODE);
+	CDC* pDC = pWnd->GetDC();
+
+    //显示JPEG图片 
+    IPicture *pPic = NULL;    
     
+    //加载一个Image 通过Stream
+    //Stream，数据长度，真， GUID， IPicture
+    if(SUCCEEDED(OleLoadPicture(pStream, fstatus.m_size, TRUE,IID_IPicture, (LPVOID*)&pPic)))   
+    {    
+        if (m_bOriginalSize) //图片原始大小显示
+        {
+            // 宽高，MM_HIMETRIC 模式，单位是0.01毫米 
+            long nWidth = 0, nHeight = 0; 
 
-    IStream *pStream = NULL;
+            // 宽
+            pPic->get_Width( &nWidth );  
+            // 高
+            pPic->get_Height( &nHeight );  
+            
+            CSize sz( nWidth, nHeight ); 
+
+            // 转换 MM_HIMETRIC 模式单位为 MM_TEXT 像素单位 
+            pDC->HIMETRICtoDP( &sz ); 
+
+            //画
+            if(FAILED(pPic->Render(pDC->m_hDC, 0, 0, sz.cx, sz.cy, 
+                        0, nHeight, nWidth, -nHeight, NULL)))  
+            {
+                pPic->Release();  
+                return FALSE;        
+            }
+        }   
+        else
+        {
+            OLE_XSIZE_HIMETRIC hmWidth;      
+            OLE_YSIZE_HIMETRIC hmHeight;    
+            pPic->get_Width(&hmWidth);
+            pPic->get_Height(&hmHeight);   
+            
+            //获取图片的宽和高  
+            double fX,fY;
+            fX = (double)pDC->GetDeviceCaps(HORZRES)  * (double)hmWidth /
+                ((double)pDC->GetDeviceCaps(HORZSIZE) * 100.0); 
+            fY = (double)pDC->GetDeviceCaps(VERTRES)  * (double)hmHeight /
+                ((double)pDC->GetDeviceCaps(VERTSIZE) * 100.0);  
+            
+            //按图片原始大小显示
+            if(FAILED(pPic->Render(*pDC,        //DC
+                                    0,          //X      显示位置X
+                                    0,          //Y      显示位置
+                                    (DWORD)fX,  //Width  目标宽
+                                    (DWORD)fY,  //Height 目标高
+                                    0,          //水平偏移量开始复制的源图像中。
+                                    hmHeight,   //源图片的垂直偏移量开始复制。
+                                    hmWidth,    //水平程度从源复制图片。
+                                    -hmHeight,  //垂直程度从源复制图片。
+                                    NULL)       //
+                                    ))         
+            {
+                pPic->Release();  
+                return FALSE;        
+            }
+        }       
+        
+        if ( pStream ) pStream->Release(); // 释放 IStream 指针
+        if ( pPic ) pPic->Release(); // 释放 IPicture 指针  
+    }   
+    else    
+    {      
+        return FALSE;   
+    }    
     
-    //从全局空间 创建Stream
-    if(CreateStreamOnHGlobal(hGlobal, TRUE, &pStream) != S_OK) 
-        return FALSE;
-
-    //创建DC
-    CDC* pDc = m_GetCodeCtl.GetWindowDC();
-    Graphics graphics(pDc->m_hDC);
-
-    //加载图片
-    //Image image(L"code.jpg", FALSE);//图片全路径+图片格式
-    Image imageCode(pStream);
-    
-    //画图
-    if(graphics.DrawImage(&imageCode, 0, 0, rect.Width(), rect.Height()) != Ok)
-        return FALSE;
-
-    //释放Istream
-    pStream->Release();
-    
-    //释放申请的全局空间
-    GlobalFree(hGlobal);
-
-    //释放DC
-    ReleaseDC(pDc);
-
+    ReleaseDC(pDC);
     return TRUE;
 }
 
-BOOL CGetCodeDlg::ShowPicInFile()
+//验证码默认显示在0, 0的位置
+BOOL CGetCodeDlg::ShowPicInFile(int x, int y)
 {
-    //创建DC
-    CDC* pDc = m_GetCodeCtl.GetWindowDC();
-
+    IStream *pStream = NULL; 
+    CFileStatus fstatus;
+    CFile file;
     
-    Graphics graphics(pDc->GetSafeHdc());
+    //打开文件并检测文件的有效性   
+    //CFile打开文件
+    //获取文件信息 file.GetStatus(strPath,fstatus)
+    //获取文件大小 cb = fstatus.m_size
+    if (file.Open(m_strFile, CFile::modeRead) && 
+        file.GetStatus(m_strFile,fstatus) &&
+        ((m_dwDataLen = fstatus.m_size) != -1))     
+    {        
+        //申请全局空间
+        HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE, m_dwDataLen);        
+        LPVOID pvData = NULL;         
+        if (hGlobal != NULL)        
+        {            
+            //加锁全局空间
+            pvData = GlobalLock(hGlobal);            
+            if (pvData != NULL)           
+            {          
+                //MemCpy 操作全局空间
+                file.ReadHuge(pvData, m_dwDataLen);      
+                
+                //解锁全局空间
+                GlobalUnlock(hGlobal);           
+                
+                //通过全局空间创建一个Stream
+                CreateStreamOnHGlobal(hGlobal, TRUE, &pStream);     
+            }     
+        } 
+    }    
+    else   
+    {   
+        try
+        {
+            file.Close();
+        }
+        catch (CFileException &e)
+        {
+            TCHAR   szCause[MAXBYTE] = {0};
+            e.GetErrorMessage(szCause, MAXBYTE);
+        	AfxMessageBox(szCause);
+        }
+        
+        
+        return FALSE;  
+    }
+    //打开文件结束  
+    try
+    {
+        file.Close();
+    }
+    catch (CFileException &e)
+    {
+        TCHAR   szCause[MAXBYTE] = {0};
+        e.GetErrorMessage(szCause, MAXBYTE);
+        AfxMessageBox(szCause);
+    }
+    
+    //获得DC
+    //CDC* pDC = m_GetCodeCtl.GetDC();
+    CWnd* pWnd = GetDlgItem(IDC_STATIC_GET_CODE);
+	CDC* pDC = pWnd->GetDC();
 
-    Image image((_bstr_t)m_strFile);
+    //显示JPEG图片 
+    IPicture *pPic = NULL;    
+    
+    //加载一个Image 通过Stream
+    //Stream，数据长度，真， GUID， IPicture
+    if(SUCCEEDED(OleLoadPicture(pStream, fstatus.m_size, TRUE,IID_IPicture, (LPVOID*)&pPic)))   
+    {    
+        if (m_bOriginalSize) //图片原始大小显示
+        {
+            // 宽高，MM_HIMETRIC 模式，单位是0.01毫米 
+            long nWidth = 0, nHeight = 0; 
 
-    if(graphics.DrawImage(&image, 10, 10) != Ok)
-        return FALSE;    
+            // 宽
+            pPic->get_Width( &nWidth );  
+            // 高
+            pPic->get_Height( &nHeight );  
+            
+            CSize sz( nWidth, nHeight ); 
 
-    ReleaseDC(pDc);
+            // 转换 MM_HIMETRIC 模式单位为 MM_TEXT 像素单位 
+            pDC->HIMETRICtoDP( &sz ); 
+
+            //画
+            if(FAILED(pPic->Render(pDC->m_hDC, 0, 0, sz.cx, sz.cy, 
+                        0, nHeight, nWidth, -nHeight, NULL)))  
+            {
+                pPic->Release();  
+                return FALSE;        
+            }
+        }   
+        else
+        {
+            OLE_XSIZE_HIMETRIC hmWidth;      
+            OLE_YSIZE_HIMETRIC hmHeight;    
+            pPic->get_Width(&hmWidth);
+            pPic->get_Height(&hmHeight);   
+            
+            //获取图片的宽和高  
+            double fX,fY;
+            fX = (double)pDC->GetDeviceCaps(HORZRES)  * (double)hmWidth /
+                ((double)pDC->GetDeviceCaps(HORZSIZE) * 100.0); 
+            fY = (double)pDC->GetDeviceCaps(VERTRES)  * (double)hmHeight /
+                ((double)pDC->GetDeviceCaps(VERTSIZE) * 100.0);  
+            
+            //按图片原始大小显示
+            if(FAILED(pPic->Render(*pDC,        //DC
+                                    0,          //X      显示位置X
+                                    0,          //Y      显示位置
+                                    (DWORD)fX,  //Width  目标宽
+                                    (DWORD)fY,  //Height 目标高
+                                    0,          //水平偏移量开始复制的源图像中。
+                                    hmHeight,   //源图片的垂直偏移量开始复制。
+                                    hmWidth,    //水平程度从源复制图片。
+                                    -hmHeight,  //垂直程度从源复制图片。
+                                    NULL)       //
+                                    ))         
+            {
+                pPic->Release();  
+                return FALSE;        
+            }
+        }       
+        
+        if ( pStream ) pStream->Release(); // 释放 IStream 指针
+        if ( pPic ) pPic->Release(); // 释放 IPicture 指针  
+    }   
+    else    
+    {      
+        return FALSE;   
+    }    
+    
+    ReleaseDC(pDC);
     return TRUE;
 }
 
-BOOL CGetCodeDlg::SetPicData(LPVOID pSrc, DWORD dwLen)
+BOOL CGetCodeDlg::SetPicData(LPVOID pSrc, DWORD dwLen, BOOL OriginalSize)
 {
     m_pMemData = (PCHAR)pSrc;
     m_dwDataLen = dwLen;
-
-    bIsShowFromFile = FALSE;
+    
+    m_bOriginalSize = OriginalSize;
+    m_bIsShowFromFile = FALSE;
     return TRUE;
 }
 
-BOOL CGetCodeDlg::SetPicData(IWinHttpRequestPtr& pObj)
+BOOL CGetCodeDlg::SetPicData(IWinHttpRequestPtr& pObj, BOOL OriginalSize)
 {
+    //获取Request头
     _variant_t varRspBody = pObj->GetResponseBody();
-    m_dwDataLen = varRspBody.parray->rgsabound[0].cElements;
-    char *m_pData = (char *)varRspBody.parray->pvData;
 
-    bIsShowFromFile = FALSE;
+    //得到数据长度和数据
+    m_dwDataLen = varRspBody.parray->rgsabound[0].cElements;
+    m_pMemData = (char *)varRspBody.parray->pvData;
+
+    m_bOriginalSize = OriginalSize;
+    m_bIsShowFromFile = FALSE;
     return TRUE;
 }
 
-BOOL CGetCodeDlg::SetPicData(CString strFileName)
+BOOL CGetCodeDlg::SetPicData(CString strFileName, BOOL OriginalSize)
 {
     m_strFile = strFileName;
-    bIsShowFromFile = TRUE;
+
+    m_bOriginalSize = OriginalSize;
+    m_bIsShowFromFile = TRUE;
     return TRUE;
 }
-// void CGetCodeDlg::ShowcodePic()
-// {
-//     CImage img;
-//     //HBITMAP bitMap; 
-//     //CBitmap BitMap;
-//     BOOL bRet = LoadMemImage(m_pData, m_dwDataLen, img);
-//     CStatic *pStaticPic = (CStatic *)GetDlgItem(IDC_PIC);
-//     if (bRet && pStaticPic)
-//     {
-//         HBITMAP retBitmap = m_PicCodeCtl.SetBitmap();->SetBitmap(img.Detach());
-//     }
-// }
-// 
-// BOOL CGetCodeDlg::LoadMemImage(void *pMemData, ULONG nLen, CImage& imgObj)
-// {
-//     BOOL bRet = FALSE;
-// 
-//     //申请全局空间
-//     HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE, nLen);
-//     
-//     //解锁并用pData指向
-//     void *pData = GlobalLock(hGlobal);
-//     
-//     //拷贝图片数据到pData
-//     memcpy(pData, pMemData, nLen);
-//     
-//     //解锁
-//     GlobalUnlock(hGlobal);
-//     
-// 
-//     IStream *pStream = NULL;
-//     
-//     //从全局空间 创建Stream
-//     if(CreateStreamOnHGlobal(hGlobal, TRUE, &pStream) == S_OK) 
-//     {
-//         //加载
-//         if (SUCCEEDED(imgObj.Load(pStream))) 
-//             bRet = TRUE;
-//         
-//         //释放Istream
-//         pStream->Release();
-//     }
-// 
-//     //释放申请的全局空间
-//     GlobalFree(hGlobal);
-//     
-//     return bRet;
-// } 
 
 BOOL CGetCodeDlg::OnInitDialog() 
 {
 	CDialog::OnInitDialog();
-	
-	//初始化GDI
-    //GdiplusStartup(&m_gdiplusToken, &m_StartupInput, NULL);
-
+    
+    
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -216,7 +362,7 @@ BOOL CGetCodeDlg::OnInitDialog()
 BOOL CGetCodeDlg::DestroyWindow() 
 {
 	// TODO: Add your specialized code here and/or call the base class
-    Gdiplus::GdiplusShutdown(m_gdiplusToken);  
+    //Gdiplus::GdiplusShutdown(m_gdiplusToken);  
     //return __super::ExitInstance();  
 	return CDialog::DestroyWindow();
 }
@@ -227,7 +373,7 @@ void CGetCodeDlg::OnPaint()
 	
 	// TODO: Add your message handler code here
     //显示图片
-    if(bIsShowFromFile)
+    if(m_bIsShowFromFile)
     {
         if(!ShowPicInFile())
             AfxMessageBox(TEXT("显示图片错误!"));
@@ -239,3 +385,4 @@ void CGetCodeDlg::OnPaint()
     }
     // Do not call CDialog::OnPaint() for painting messages
 }
+
