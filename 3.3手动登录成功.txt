@@ -55,6 +55,12 @@ Cookie: JSESSIONID=03086B8D8085713675CAEF6904B9366D.tomcat1; Hm_lpvt_6bcd52f51e9
 
 username=xeludukuzefo%40spambog.com&password=123456&lt=LT-338693-zEz6uM0SGfBiRJVgxUZfBzeqxvZ9ZN&execution=e1s1&_eventId=submit
 
+
+//======================
+//带验证码登录
+username=FFENgy&password=1234&validateCode=e4woh&lt=LT-781447-Zvsf39suuk0dHAzd4qjqoaDlAvGAyd&execution=e3s3&_eventId=submit
+//======================
+
 //登录包返回
 HTTP/1.1 200 OK
 Server: openresty

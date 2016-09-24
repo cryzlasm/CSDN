@@ -1,0 +1,165 @@
+GET https://passport.csdn.net/account/login?username=ZTcSGS&activeCode=420c387749781a836404c7e9d759af04&service=https://passport.csdn.net/account/register?action=userInfoView HTTP/1.1
+Host: passport.csdn.net
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: JSESSIONID=9393267FD5CD6C150E2559619BC237FC.tomcat1; uuid_tt_dd=2374975261751004143_20160831; __message_district_code=000000; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; JSESSIONID=9393267FD5CD6C150E2559619BC237FC.tomcat1; CASTGC=TGT-50813-lhAIwXmCrSfHflEbWqcyWLstxd3DMaZQKAmtVhjFHzEecoZqqN-passport.csdn.net; UserName=lCxuOp; UserInfo=wXtuNBsn%2BjPednE15hgOeu4jmCrs3MbWDvDbU0215WBg9tmdiyFlSSbJ%2FmMI0TH1smry%2Fw9Hp9UxVkVO5bSX7NQgATK%2BuCBfXUgEQM6l5zj3X8hd%2FXwsQdLnaC49z%2BVV; UserNick=lCxuOp; AU=488; UN=lCxuOp; UE="lCxuOp@spambog.com"; BT=1474707780637; access-token=fea128f0-984c-4ff3-b5a8-0bc7cde18b78; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1474602697,1474611839,1474690420,1474708368; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474708368; LSSC=LSSC-767067-rcLo3NC64qUH9YSaWzuWcoze0taPNA-passport.csdn.net; _ga=GA1.2.90815613.1473425003; dc_tos=oe049n; dc_session_id=1474708379961
+
+
+HTTP/1.1 302 Found
+Server: openresty
+Date: Sat, 24 Sep 2016 09:23:44 GMT
+Content-Type: text/html;charset=UTF-8
+Content-Length: 0
+Connection: keep-alive
+Keep-Alive: timeout=20
+Pragma: no-cache
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Cache-Control: no-cache
+Cache-Control: no-store
+Set-Cookie: JSESSIONID=9393267FD5CD6C150E2559619BC237FC.tomcat1
+Set-Cookie: CASTGC=TGT-51632-wpKxdPLFf369eM3Ey7q5E7jty7Ozw6J4siRzNDU4ONV0gpuvLk-passport.csdn.net; Path=/; Secure
+Set-Cookie: UserName=ZTcSGS; Domain=.csdn.net; Path=/
+Set-Cookie: UserInfo=bvy5kycqCzD5LjVZWpThNeFdY43rZVVQRI%2FJV6p%2FYvo6F4IaCdu9TUZLk%2Bx1Gv7W16ymiQ5JYxKbk6IHuWHucqlcnSiOm6eghy%2FCrRj06hnHCnIsMMyTUPFoxZw5Ohst; Domain=.csdn.net; Path=/
+Set-Cookie: UserNick=ZTcSGS; Domain=.csdn.net; Path=/
+Set-Cookie: AU=D9B; Domain=.csdn.net; Path=/
+Set-Cookie: UN=ZTcSGS; Domain=.csdn.net; Expires=Sun, 24-Sep-2017 09:23:42 GMT; Path=/
+Set-Cookie: UE="ZTcSGS@spambog.com"; Version=1; Domain=.csdn.net; Max-Age=31536000; Expires=Sun, 24-Sep-2017 09:23:42 GMT; Path=/
+Set-Cookie: BT=1474709022366; Domain=.csdn.net; Expires=Sun, 24-Sep-2017 09:23:42 GMT; Path=/
+Set-Cookie: access-token=4f137a14-bb40-408f-a61d-a170b281b8b2; Domain=.csdn.net; Path=/
+Location: https://passport.csdn.net/account/register?action=userInfoView
+
+
+
+------------------------------------------------------------------
+
+GET https://passport.csdn.net/account/register?action=userInfoView HTTP/1.1
+Host: passport.csdn.net
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: JSESSIONID=9393267FD5CD6C150E2559619BC237FC.tomcat1; uuid_tt_dd=2374975261751004143_20160831; __message_district_code=000000; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; JSESSIONID=9393267FD5CD6C150E2559619BC237FC.tomcat1; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1474602697,1474611839,1474690420,1474708368; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474708368; LSSC=LSSC-767067-rcLo3NC64qUH9YSaWzuWcoze0taPNA-passport.csdn.net; _ga=GA1.2.90815613.1473425003; dc_tos=oe049n; dc_session_id=1474708379961; CASTGC=TGT-51632-wpKxdPLFf369eM3Ey7q5E7jty7Ozw6J4siRzNDU4ONV0gpuvLk-passport.csdn.net; UserName=ZTcSGS; UserInfo=bvy5kycqCzD5LjVZWpThNeFdY43rZVVQRI%2FJV6p%2FYvo6F4IaCdu9TUZLk%2Bx1Gv7W16ymiQ5JYxKbk6IHuWHucqlcnSiOm6eghy%2FCrRj06hnHCnIsMMyTUPFoxZw5Ohst; UserNick=ZTcSGS; AU=D9B; UN=ZTcSGS; UE="ZTcSGS@spambog.com"; BT=1474709022366; access-token=4f137a14-bb40-408f-a61d-a170b281b8b2
+
+
+HTTP/1.1 200 OK
+Server: openresty
+Date: Sat, 24 Sep 2016 09:23:44 GMT
+Content-Type: text/html;charset=UTF-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Content-Language: zh-CN
+Vary: Accept-Encoding
+Content-Length: 5261
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+
+
+
+
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
+    <title>注册帐号</title>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="/css/register.css" />
+    <link  type="text/css" rel="stylesheet" href="https://csdnimg.cn/public/common/toolbar/css/index.css" />
+    <script src="https://csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <link type="text/css" rel="stylesheet" href="/css/register-progress.css" />
+    <link type="text/css" rel="stylesheet" href="/css/add-information.css" /> 
+    <!--if lt IE 9
+    script( src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js" )
+    script( src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js" )
+    -->
+  </head>
+  <body>
+  <script type="text/javascript">
+  		var protocol = window.location.protocol;
+  		document.write('<script type="text/javascript" src="' +protocol+ '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></'+'script>');
+	</script>
+	<div class="header"></div>
+    <div class="main">
+      <div class="container container-custom">
+         <div class="register-progress clearfix hidden-xs hidden-sm">
+          <div class="pross pross-ok"><span class="index">1</span>填写注册信息
+            <div class="pross-dir pross-dir-bg"><span class="outside"></span><span class="inside"></span></div>
+          </div>
+          <div class="pross pross-ok"><span class="index">2</span>邮箱激活
+            <div class="pross-dir pross-dir-bg"><span class="outside"></span><span class="inside"></span></div>
+          </div>
+          <div class="pross pross-ok"><span class="index">3</span>完善资料
+            <div class="pross-dir"><span class="outside"></span><span class="inside"></span></div>
+          </div>
+          <div class="pross"><span class="index">4</span>绑定手机
+            <div class="pross-dir"><span class="outside"></span><span class="inside"></span></div>
+          </div>
+          <div class="pross"><span class="index">5</span>注册成功
+          </div>
+        </div>
+        <div class="register-info">
+          <h3><span class="icon"></span></h3>
+          <div class="information">
+            <form id="form">
+              <ul>
+                 <li><span>所在地区：</span><span>
+                    <select name="prov" class="prov"></select><em>省</em>
+                    <select name="city" class="city"></select><em>市</em></span></li>
+                <li><span>当前公司：</span>
+                  <input type="text" name="comp" class="comp">
+                </li>
+                <li><span>当前职位：</span>
+                  <input type="text" name="job" class="job">
+                </li>
+                <li><span>毕业学校：</span>
+                  <input type="text" name="school" class="school">
+                </li>
+                <li><span>最终学历：</span>
+                  <select name="edu" class="edu">
+                  	<option value="">请选择</option>
+                    <option value="7">博士后</option>
+                    <option value="6">博士</option>
+                    <option value="5">MBA</option>
+                    <option value="4">硕士</option>
+                    <option value="3">本科</option>
+                    <option value="2">大专</option>
+                    <option value="1">中专</option>
+                    <option value="-10">高中</option>                 
+                    <option value="-15">初中</option>
+                    <option value="-5">中技</option>
+                  </select>
+                  </select>
+                </li>
+                <li><span>专业技能：</span>
+                  <input type="text" class="skill" name="skill" placeholder="请用空格分隔">
+                </li>
+                <!-- li><span class="recom-tit">推荐技能：</span><span class="recom"><a href="#">java</a><a href="#">java 编程</a><a href="#">java</a></span></li-->
+                <li><a href="#" class="submit">下一步</a><a href="#" class="ignore">跳   过</a></li>
+              </ul>
+            </form>
+          </div>
+          <div id="tooltip" class="tooltip-info"><span class="icon-border"></span><span class="icon-bg"></span><span class="strength"><em class="level">低</em><span></span><span></span><span></span></span><span class="state"></span><span class="mess"></span></div>         
+        </div>
+      </div>
+    </div>
+    <div class="footer"></div>
+   <script src="/js/libs/jquery-migrate-1.2.1.js"></script>
+   <script src="/js/libs/jquery.autocomplete.js"></script>
+     <script data-main="/js/addInfo-conf.js" src="/js/libs/require.js"></script>
+    <script type="text/javascript">
+		document.write('<script type="text/javascript" src="//csdnimg.cn/pubfooter/js/publib_footer.js?' + Math.floor(new Date()/120000).toString(36) + '="></'+'script>');
+	</script>
+  </body>
+</html>
+
+------------------------------------------------------------------
+

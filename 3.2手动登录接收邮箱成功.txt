@@ -125,3 +125,14 @@ Content-Length: 40800
 <div class="Label">Betreff:</div>
 <div class="Value">1</div>
 ===================================
+
+https://passport.csdn.net/account/login?username=lCxuOp&activeCode=7024c922024717c3b076f6594dfc0738&service=https://passport.csdn.net/account/register?action=userInfoView
+
+//验证连接
+GET https://passport.csdn.net/account/login?username=SqMRcl&activeCode=ac602a04daacf61b1184e99112d17d6b&service=https://passport.csdn.net/account/register?action=userInfoView HTTP/1.1
+Accept: text/html, application/xhtml+xml, */*
+Accept-Language: zh-CN
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko
+Accept-Encoding: gzip, deflate
+Host: passport.csdn.net
+Connection: Keep-Alive

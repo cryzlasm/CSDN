@@ -26,6 +26,12 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCSDNDlg)
 	enum { IDD = IDD_CSDN_DIALOG };
+	CButton	m_BtnSetCtl;
+	CButton	m_BtnSaveCtl;
+	CButton	m_BtnRegCtl;
+	CButton	m_BtnLogCtl;
+	CEdit	m_RegUserCtl;
+	CEdit	m_TestCtl;
 	CEdit	m_HtmlCtl;
 	CStatic	m_InfoCtl;
 	//}}AFX_DATA
@@ -63,10 +69,25 @@ public:
     //随机用户名，为十位
     BOOL RandUser();
 
+    //验证码验证流程
+    BOOL GetVerifyCode(CString& strRetCode);
 
     //是否调试代理
-    BOOL m_bIsDebug;
+    BOOL m_bIsProxyDebug;
     BOOL ProxyHost();
+
+
+    //设置Btn 的隐藏状态
+    BOOL ShowButton(DWORD dwNum);
+
+    //转换字符串到用户名
+    BOOL ConvertUserFromMail(CString strSrcUser);
+
+    //用于激活用户
+    void OnActiveReg(CString strUser);
+
+    //释放原有Request，实例新的Request
+    BOOL GetNewRequest();
 
 // Implementation
 protected:
@@ -84,9 +105,16 @@ protected:
 	afx_msg void OnBtnLogin();
 	afx_msg void OnBtnSet();
 	afx_msg void OnBtnTest();
-	afx_msg void OnBtnGetCode();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+    enum _BtnName
+    {
+        BTN_REG,    //注册
+        BTN_SET,    //设置
+        BTN_SAVE,   //保存
+        BTN_LOGIN   //登录
+    };
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -55,6 +55,8 @@ public:
     //是否从文件读取Pic数据
     BOOL m_bIsShowFromFile;
 
+    CString GetInputCode() CONST;
+
 // Dialog Data
 	//{{AFX_DATA(CGetCodeDlg)
 	enum { IDD = IDD_DLG_GET_CODE };

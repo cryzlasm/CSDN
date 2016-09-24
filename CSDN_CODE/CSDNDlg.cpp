@@ -8,7 +8,12 @@
 
 //#include "gzip/zstream.h"
 
+
 #include <ATLBASE.H>
+
+//BOOST命名空间与ATLBASE.H 冲突，需要放在它之下
+using namespace std;
+using namespace boost;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -78,7 +83,9 @@ CCSDNDlg::CCSDNDlg(CWnd* pParent /*=NULL*/)
     m_bIsExitThread = FALSE;
     m_strUser = TEXT("");
 
-    m_bIsDebug = TRUE;
+    //是否使用代理
+    m_bIsProxyDebug = TRUE;
+    //m_bIsProxyDebug = FALSE;
 
     m_nTime = 0;
 }
@@ -87,6 +94,12 @@ void CCSDNDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CCSDNDlg)
+	DDX_Control(pDX, IDC_BTN_SET, m_BtnSetCtl);
+	DDX_Control(pDX, IDC_BTN_SAVE, m_BtnSaveCtl);
+	DDX_Control(pDX, IDC_BTN_REG, m_BtnRegCtl);
+	DDX_Control(pDX, IDC_BTN_LOGIN, m_BtnLogCtl);
+	DDX_Control(pDX, IDC_EDIT_REG_USER, m_RegUserCtl);
+	DDX_Control(pDX, IDC_EDIT_TEST, m_TestCtl);
 	DDX_Control(pDX, IDC_EDIT_HTML, m_HtmlCtl);
 	DDX_Control(pDX, IDC_STATIC_INFO, m_InfoCtl);
 	//}}AFX_DATA_MAP
@@ -102,7 +115,6 @@ BEGIN_MESSAGE_MAP(CCSDNDlg, CDialog)
 	ON_BN_CLICKED(IDC_BTN_LOGIN, OnBtnLogin)
 	ON_BN_CLICKED(IDC_BTN_SET, OnBtnSet)
 	ON_BN_CLICKED(IDC_BTN_TEST, OnBtnTest)
-	ON_BN_CLICKED(IDC_BTN_GET_CODE, OnBtnGetCode)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -147,10 +159,10 @@ BOOL CCSDNDlg::OnInitDialog()
         exit(0);
     }
 
+    
     //设置HTTPS忽略
-    m_Assist.IgnoreHTTPS(m_pHttpReq);
-    
-    
+    m_Assist.SetIgnoreHTTPS(m_pHttpReq);
+    ShowButton(BTN_REG);
 
     return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -204,6 +216,56 @@ HCURSOR CCSDNDlg::OnQueryDragIcon()
 	return (HCURSOR) m_hIcon;
 }
 
+//转换字符串到用户名
+BOOL CCSDNDlg::ConvertUserFromMail(CString strSrcUser)
+{
+    if(strSrcUser.IsEmpty())
+        return FALSE;
+
+    int nPos = strSrcUser.Find(TEXT("@"));
+    if(nPos == -1)
+    {
+        m_strUser = strSrcUser;
+        return FALSE;
+    }
+
+    m_strUser = strSrcUser.Left(nPos);
+    return TRUE;
+}
+
+BOOL CCSDNDlg::ShowButton(DWORD dwNum)
+{
+    //DisAble  所有按钮
+    m_BtnRegCtl.EnableWindow(FALSE);
+    m_BtnSetCtl.EnableWindow(FALSE);
+    m_BtnSaveCtl.EnableWindow(FALSE);
+	m_BtnLogCtl.EnableWindow(FALSE);
+
+    switch(dwNum)
+    {
+    case BTN_REG:
+        m_BtnRegCtl.EnableWindow(TRUE);
+        break;
+        
+    case BTN_SET:
+        m_BtnSetCtl.EnableWindow(TRUE);
+        break;
+        
+    case BTN_SAVE:
+        m_BtnSaveCtl.EnableWindow(TRUE);
+        break;
+        
+    case BTN_LOGIN:
+	    m_BtnLogCtl.EnableWindow(TRUE);
+        break;
+
+    default:
+        m_BtnRegCtl.EnableWindow(TRUE);
+        break;
+    }
+    return TRUE;
+}
+
 void CCSDNDlg::OnOK() 
 {
 	// TODO: Add extra validation here
@@ -218,7 +280,7 @@ void CCSDNDlg::OnOK()
 #define WEB_UA_INFO             TEXT("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36")
 
 #define WEB_ENCODE              TEXT("Accept-Encoding")
-#define WEB_ENCODE_GZIP         TEXT("gzip")
+#define WEB_ENCODE_GZIP         TEXT("gzip, deflate")
 
 #define WEB_LANGUAGE            TEXT("Accept-Language")
 #define WEB_LANGUAGE_INFO       TEXT("zh-CN,zh;q=0.8")
@@ -245,10 +307,16 @@ void CCSDNDlg::OnOK()
 //邮箱后缀
 #define WEB_MAIL                TEXT("@spambog.com")
 
+//开始Request
+#define BEGIN_HTTP_REQUEST  try{
+    
+//结束Request
+#define END_HTTP_REQUEST    }catch (_com_error &e){try{AfxMessageBox((LPTSTR)e.Description());}catch(...){}};
+
 
 BOOL CCSDNDlg::ProxyHost()
 {
-    if(m_bIsDebug)
+    if(m_bIsProxyDebug)
     {
         m_Assist.SetProxy(m_pHttpReq);
     }
@@ -258,18 +326,10 @@ BOOL CCSDNDlg::ProxyHost()
 
 void CCSDNDlg::OnBtnReg() 
 {
-/*
-"Cache-Control: max-age=0\
-Connection: keep-alive\
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,* / *;q=0.8\
-Accept-Language: zh-CN,zh;q=0.8\
-Host: passport.csdn.net\
-Referer: http://passport.csdn.net/account/mobileregister?action=mobileRegister\
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36\
-Connection: Keep-Alive"*/
-
+    ShowButton(BTN_REG);
     try
     {
+        //======================打开主页得到Cookie========================
         //GetCsdn注册连接得到COOKIE
         m_pHttpReq->Open(WEB_GET, TEXT("http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net"));
         
@@ -279,6 +339,7 @@ Connection: Keep-Alive"*/
         m_pHttpReq->SetRequestHeader(WEB_CACHE_CONTROL, WEB_CACHE_CONTROL_INFO);
         m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
         m_pHttpReq->SetRequestHeader(WEB_ACCEPT, WEB_ACCEPT_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
         m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
         m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("passport.csdn.net"));
         m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("http://passport.csdn.net/account/mobileregister?action=mobileRegister"));
@@ -286,104 +347,109 @@ Connection: Keep-Alive"*/
         
         //请求网页，得到Cookie
         m_pHttpReq->Send();
-        
-        
-
-        m_nTime = m_Assist.GetTimer();
-
-        //拼接验证码字符串
-        CString strVerify = TEXT("");
-        strVerify.Format(TEXT("http://passport.csdn.net/ajax/verifyhandler.ashx?rand=%d"), m_nTime);
-        //strVerify = TEXT("http://passport.csdn.net/ajax/verifyhandler.ashx");
-
-        m_pHttpReq->Open(WEB_GET, (_bstr_t)strVerify);
-
-        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5"));
-        m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net/"));
-        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, TEXT("zh-CN"));
-        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
-        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("passport.csdn.net"));
-        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
-        
-        //访问验证码
-        m_pHttpReq->Send();
-
-
-        //获取回执信息
-        long statusCode = m_pHttpReq->GetStatus();
 
         //获得回执信息
         _variant_t varRspBody = m_pHttpReq->GetResponseBody();	
         ULONG dataLen = varRspBody.parray->rgsabound[0].cElements;
 		char *pContentBuffer = (char *)varRspBody.parray->pvData;
 
-//         申请缓冲区
-//                 char * m_pContentBuffer = NULL;
-//                 DWORD m_BufferLen = dataLen;
-//                 if (m_pContentBuffer){
-//                     delete [] m_pContentBuffer;
-//                     m_pContentBuffer = NULL;
-//                 }
-//         
-//                 //申请缓冲区
-//                 m_pContentBuffer = new char[dataLen+1];
-//                 if (!m_pContentBuffer) 
-//                     return;
-//                 
-//                 //清空缓冲区，拷贝数据
-//                 ZeroMemory(m_pContentBuffer, dataLen+1);
-//                 memcpy(m_pContentBuffer, pContentBuffer, dataLen);
-//         
-//                 
-//                 //获取Http协议头中的编码类型
-//                 CString strAllH;
-//                 _bstr_t strAllHeaders = m_pHttpReq->GetAllResponseHeaders();
-//                 strAllH = (TCHAR*)strAllHeaders;
-//                 CString m_CompressType;
+        //Gzip解码
+        std::string strOut = "";
+        m_Assist.UnGZip((BYTE*)pContentBuffer, dataLen, strOut);
 
-//         查找编码格式
-//                 if (strAllH.Find(_T("Content-Encoding")) >= 0)
-//                 {
-//                     _bstr_t strCntEncode = m_pHttpReq->GetResponseHeader(_T("Content-Encoding"));
-//                     m_CompressType = (LPTSTR)strCntEncode;
-//         	    }
-//                 else if(strAllH.Find(_T("Transfer-Encoding")) >= 0)
-//                 {
-//                     bstr_t strCntEncode = m_pHttpReq->GetResponseHeader(_T("Transfer-Encoding"));
-//                     m_CompressType = (LPTSTR)strCntEncode;
-//                 }
+        //显示数据到控件
+        if(!strOut.empty())
+            m_HtmlCtl.SetWindowText(m_Assist.UTF8ToGBK(strOut).c_str());
+        //======================打开主页得到Cookie========================
+
+        //======================验证码====================================
+        //验证流程
+        CString strGetCode = TEXT("");              //用于保存验证码
+        if(GetVerifyCode(strGetCode))
+            m_InfoCtl.SetWindowText(TEXT("验证成功: ") + strGetCode);
+        //======================验证码====================================
+
+        //======================提交注册信息==============================
+        BOOL bIsRegOk = FALSE;
+
+        m_pHttpReq->Open(WEB_POST, TEXT("http://passport.csdn.net/account/register?action=saveUser&isFrom=false"));
         
-        //设置图片数据
-//         if(m_CompressType.CompareNoCase(_T("chunked")) == 0)
-//         {
-            if(pContentBuffer != NULL)
+        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("text/html, application/xhtml+xml, */*"));
+        m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net"));
+        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+        m_pHttpReq->SetRequestHeader(TEXT("Content-Type"), TEXT("application/x-www-form-urlencoded"));
+        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("passport.csdn.net"));
+        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_CACHE_PRAGMA, WEB_NO_CACHE);
+
+        //随机一个12位用户名
+        RandUser();
+        //CString strMail = WEB_MAIL;
+        CString strPostBody = TEXT("");
+        strPostBody.Format(TEXT("fromUrl=http://www.csdn.ne&userName=%s&email=%s%s&password=123456&confirmpassword=123456&validateCode=%s&agree=on"),
+                            m_strUser,
+                            m_strUser,
+                            WEB_MAIL,
+                            strGetCode);
+
+        //发送Post数据
+        m_pHttpReq->Send((_bstr_t)strPostBody);
+
+        //获取回执信息
+        long statusCode = m_pHttpReq->GetStatus();
+        
+        //获得回执信息
+        varRspBody = m_pHttpReq->GetResponseBody();	
+        dataLen = varRspBody.parray->rgsabound[0].cElements;
+	    pContentBuffer = (char *)varRspBody.parray->pvData;
+
+        if(statusCode == 200)
+        {
+            strOut = "";
+            m_Assist.UnGZip((PBYTE)pContentBuffer, dataLen, strOut);
+            
+            //转换编码
+            //m_Assist.UTF8ToGBK(strOut);
+            
+            //获得HTML 的数据
+            CString strHtm = m_Assist.UTF8ToGBK(strOut).c_str();
+            
+            int nPos1 = strHtm.Find(TEXT("请在24小时内点击邮件中的链接继续完成注册"));
+            int nPos2 = strHtm.Find(TEXT("邮件已发送到邮箱"));
+            if(nPos1 != -1 && nPos2 != -1)
             {
-                m_CodeDlg.SetPicData((LPVOID)pContentBuffer, dataLen);
-            }
-//         }
-//         else if (m_CompressType.CompareNoCase(_T("gzip")) != 0)
-//         {
-//             MessageBox(_T("网页源码非GZip格式压缩，不能进行解压操作！"), _T("提示"));
-//             return;
-//         }
-//         else
-//         {
-//             std::string strOut;
-//             int ret = m_Assist.HttpGzDecompress((Byte*)m_pContentBuffer, m_BufferLen, strOut);
-//             if (ret < 0 || strOut.size() <= 0)
-//             {
-//                 MessageBox(_T("解压缩内容失败！"), _T("提示"));
-//                 return;
-// 	        }
+                bIsRegOk = TRUE;
+                m_HtmlCtl.SetWindowText(strHtm);
+                m_InfoCtl.SetWindowText(TEXT("注册成功，接收验证邮件"));
+
+                CString strWrite = m_strUser + WEB_MAIL;
+                m_RegUserCtl.SetWindowText(strWrite);
+//                 CFile file("c:\\User.txt", CFile::modeCreate | CFile::modeWrite);
+//                 file.Write(strWrite, strWrite.GetLength());
+//                 file.Flush();
 // 
-//             m_CodeDlg.SetPicData(strOut.c_str(), strOut.length());
-//         }
+//                 try
+//                 {
+//                     file.Close();
+//                 }
+//                 catch(...)
+//                 {}
+            }
+            else
+            {
+                AfxMessageBox(TEXT("注册失败，请重启程序\r\n如果多次重启，均未解决\r\n请联管理员"));
+            }
+        }
+
+        //======================提交注册信息==============================
+
+        //======================打开注册邮箱提取注册验证==================
 
 
-        //设置验证码信息
-        
-        m_CodeDlg.DoModal();
+        //======================打开注册邮箱提取注册验证==================
+        OnActiveReg(m_strUser);
     }
     catch (_com_error &e)
     {
@@ -398,8 +464,121 @@ Connection: Keep-Alive"*/
 
 }
 
-//用户名在10个的位置随机
-#define USER_MAX_LEN 12
+//验证码相关, 验证成功则返回True  失败则Flase
+BOOL CCSDNDlg::GetVerifyCode(CString& strRetCode)
+{
+    BOOL bRet = FALSE;
+    CString strTrue = TEXT("true");      //用于验证验证码的标志
+    try
+    {
+        DWORD dwCount = 0;
+        while(1)
+        {
+            //计次，防止死循环
+            if(dwCount++ == 3)
+            {
+                AfxMessageBox(TEXT("验证码错误3次，取消获取验证码！"));
+                break;
+            }
+
+            //获取时间戳
+            m_nTime = m_Assist.GetTimer();
+            //拼接验证码字符串
+            CString strVerify = TEXT("");
+            strVerify.Format(TEXT("http://passport.csdn.net/ajax/verifyhandler.ashx?rand=%d"), m_nTime);
+            //strVerify = TEXT("http://passport.csdn.net/ajax/verifyhandler.ashx");
+
+            m_pHttpReq->Open(WEB_GET, (_bstr_t)strVerify);
+
+            m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5"));
+            m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net/"));
+            m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, TEXT("zh-CN"));
+            m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+            m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+            m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("passport.csdn.net"));
+            m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+
+            //访问验证码
+            m_pHttpReq->Send();
+
+
+            //获取回执信息
+            long statusCode = m_pHttpReq->GetStatus();
+
+            //获得回执信息
+            _variant_t varRspBody = m_pHttpReq->GetResponseBody();	
+            ULONG dataLen = varRspBody.parray->rgsabound[0].cElements;
+	        char *pContentBuffer = (char *)varRspBody.parray->pvData;
+
+            //设置图片数据
+            if(pContentBuffer != NULL)
+            {
+                m_CodeDlg.SetPicData((LPVOID)pContentBuffer, dataLen);
+            }
+
+            //显示
+            m_CodeDlg.DoModal();
+    
+            //获取输入的验证码
+            strRetCode = m_CodeDlg.GetInputCode();
+    
+            if(strRetCode.IsEmpty())
+            {
+                AfxMessageBox(TEXT("未输入验证码！"));
+                continue;
+            }
+
+            //拼接验证码字符串
+            strVerify = TEXT("");
+            strVerify.Format(TEXT("http://passport.csdn.net/account/register?action=validateCode&validateCode=%s"), strRetCode);
+    
+            m_pHttpReq->Open(WEB_GET, (_bstr_t)strVerify);
+    
+            m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("passport.csdn.net"));
+            m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+            m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("*/*"));
+            m_pHttpReq->SetRequestHeader(TEXT("X-Requested-With"), TEXT("XMLHttpRequest"));
+            m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+            m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net/"));
+            m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+            m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, TEXT("zh-CN"));
+    
+            //访问验证码
+            m_pHttpReq->Send();
+
+            varRspBody = m_pHttpReq->GetResponseBody();	
+            dataLen = varRspBody.parray->rgsabound[0].cElements;
+	        pContentBuffer = (char *)varRspBody.parray->pvData;
+
+            CString strTrueCodeRep = pContentBuffer;
+
+            strTrueCodeRep = strTrueCodeRep.Left(strTrue.GetLength());
+            //校验验证信息
+            if(!strTrueCodeRep.CompareNoCase(strTrue))
+            {
+                bRet = TRUE;
+                break;
+            }
+        }//End While()
+    
+    }
+    catch (_com_error &e)
+    {
+        try
+        {
+            //打印错误信息
+            AfxMessageBox((LPTSTR)e.Description());
+        }
+        catch (...)
+        {}
+    } 
+    return bRet;
+}
+
+
+
+//用户名在12个的位置随机
+#define USER_MAX_LEN 6
 BOOL CCSDNDlg::RandUser()
 {
     //初始化用户名
@@ -409,6 +588,7 @@ BOOL CCSDNDlg::RandUser()
     {
         m_strUser += m_Assist.GetRand();
     }
+    
 
     return TRUE;
 }
@@ -423,7 +603,32 @@ void CCSDNDlg::OnBtnSave()
 void CCSDNDlg::OnBtnLogin() 
 {
 	// TODO: Add your control notification handler code here
-	
+    if(!GetNewRequest())
+    {
+        AfxMessageBox("初始化Com失败，请联系管理员");
+        return;
+    }
+
+    //获取用户名
+    char szBuf[MAXBYTE] = {0};
+    m_TestCtl.GetWindowText(szBuf, MAXBYTE);
+    ConvertUserFromMail(szBuf);
+    OnActiveReg(m_strUser);
+
+    try
+    {
+        
+    }
+    catch (_com_error &e)
+    {
+        try
+        {
+            //打印错误信息
+            AfxMessageBox((LPTSTR)e.Description());
+        }
+        catch (...)
+        {}
+    } 
 }
 
 void CCSDNDlg::OnBtnSet() 
@@ -450,113 +655,410 @@ BOOL CCSDNDlg::DestroyWindow()
 	return CDialog::DestroyWindow();
 }
 
+void CCSDNDlg::OnActiveReg(CString strUser)
+{
+    try
+    {
+        //设置忽略HTTPS
+        m_Assist.SetIgnoreHTTPS(m_pHttpReq);
+        m_Assist.SetHttpJmpFlase(m_pHttpReq);
+
+        ProxyHost();
+        //打开主页获得Cookie================================================
+        m_pHttpReq->Open(WEB_GET, TEXT("https://discard.email/"));
+
+        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("discard.email"));
+        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, TEXT("zh-CN"));
+        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("text/html, application/xhtml+xml, */*"));
+
+        m_pHttpReq->Send();
+
+        
+        //POST获得临时邮箱===================================================
+        m_pHttpReq->Open(WEB_POST, TEXT("https://discard.email/"));
+
+        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("text/html, application/xhtml+xml, */*"));
+        m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("https://discard.email/"));
+        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, TEXT("zh-CN"));
+        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+        m_pHttpReq->SetRequestHeader(TEXT("Content-Type"), TEXT("application/x-www-form-urlencoded"));
+        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("discard.email"));
+        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_CACHE_CONTROL, WEB_NO_CACHE);
+
+        CString strPostBody = TEXT("");
+        strPostBody.Format(TEXT("LocalPart=%s&DomainType=public&DomainId=101&PrivateDomain=&Password=&LoginButton=Postfach+abrufen&CopyAndPaste=laksjdikosajo@servermaps.net+"), 
+                            strUser);
+
+        m_pHttpReq->Send((_bstr_t)strPostBody);
+    
+        //获取回执信息
+        long statusCode = m_pHttpReq->GetStatus();
+
+        BOOL bIsGetNext = FALSE;
+        if(statusCode == 302)
+                bIsGetNext = TRUE;
+
+        if(!bIsGetNext)
+        {
+            OutputDebugString("Mail 302之前，退出");
+            return;
+        }
+
+        //注册太快，邮件没有到达
+        Sleep(5000);
+
+        //访问302之后的跳转主页面，得到邮件地址信息===========================
+        m_pHttpReq->Open(WEB_GET, TEXT("https://discard.email/inbox.htm"));
+
+        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("text/html, application/xhtml+xml, */*"));
+        m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("https://discard.email/"));
+        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, TEXT("zh-CN"));
+        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+        m_pHttpReq->SetRequestHeader(TEXT("Content-Type"), TEXT("application/x-www-form-urlencoded"));
+        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("discard.email"));
+        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_CACHE_CONTROL, WEB_NO_CACHE);
+
+        m_pHttpReq->Send();
+    
+        //获取回执信息
+        statusCode = m_pHttpReq->GetStatus();
+
+        //获得回执信息
+        _variant_t varRspBody = m_pHttpReq->GetResponseBody();	
+        ULONG dataLen = varRspBody.parray->rgsabound[0].cElements;
+	    char *pContentBuffer = (char *)varRspBody.parray->pvData;
+
+        std::string strOut = pContentBuffer;
+        m_Assist.UnGZip((PBYTE)pContentBuffer, dataLen, strOut);
+
+        strOut = m_Assist.UTF8ToGBK(strOut);
+
+        CString strMailHtm = strOut.c_str();
+
+        CString strNextHost = "";
+        bIsGetNext = FALSE;
+        if(statusCode == 200)
+        {
+            if(strMailHtm.Find("<div class=\"Head\"><a href=\"https://discard.email/message") != -1)
+            {
+                strNextHost = m_Assist.GetMidStrByLAndR(strOut, "<div class=\"Head\"><a href=\"", "\">service").c_str();
+                bIsGetNext = TRUE;
+            }
+
+        }
+
+        if(!bIsGetNext)
+        {
+            OutputDebugString("获取邮件内容之前退出");
+            return;
+        }
+
+        //获取邮件内容======================================================
+        m_pHttpReq->Open(WEB_GET, (_bstr_t)strNextHost);
+
+        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("text/html, application/xhtml+xml, */*"));
+        m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("https://discard.email/inbox.htm"));
+        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, TEXT("zh-CN"));
+        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("discard.email"));
+        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+        
+        m_pHttpReq->Send();
+
+        //获取回执信息
+        statusCode = m_pHttpReq->GetStatus();
+        
+        //获得回执信息
+        varRspBody = m_pHttpReq->GetResponseBody();	
+        dataLen = varRspBody.parray->rgsabound[0].cElements;
+        pContentBuffer = (char *)varRspBody.parray->pvData;
+        
+        strOut = "";
+        m_Assist.UnGZip((PBYTE)pContentBuffer, dataLen, strOut);
+        
+        strOut = m_Assist.UTF8ToGBK(strOut);
+        
+        strMailHtm = strOut.c_str();
+
+        CString strDstUrl = "";
+        bIsGetNext = FALSE;
+        if(statusCode == 200)
+        {
+            CString strLeft = "";
+            strLeft.Format("username=%s&activeCode=", strUser);
+
+            if(strMailHtm.Find("https://passport.csdn.net/account/login?username=") != -1)
+            {
+                //获取中间的 激活码
+                strDstUrl = m_Assist.GetMidStrByLAndR(strOut, (LPCTSTR)strLeft, "&service=https:").c_str();
+                
+                //合成激活连接
+                strLeft.Format("https://passport.csdn.net/account/login?username=%s&activeCode=%s&service=https://passport.csdn.net/account/register?action=userInfoView",
+                                    strUser,                
+                                    strDstUrl);
+
+                strDstUrl = strLeft;
+
+                m_HtmlCtl.SetWindowText(strDstUrl);
+
+                bIsGetNext = TRUE;
+            }
+        }
+
+        if(!bIsGetNext)
+        {
+            OutputDebugString("激活账户之前退出");
+            return;
+        }
+        //激活账户
+        m_pHttpReq->Open(WEB_GET, (_bstr_t)strDstUrl);
+
+        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("text/html, application/xhtml+xml, */*"));
+        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, TEXT("zh-CN"));
+        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("passport.csdn.net"));
+        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+
+        m_pHttpReq->Send();
+
+        
+        //获取回执信息
+        statusCode = m_pHttpReq->GetStatus();
+
+        CString strAllHeader = (LPTSTR)m_pHttpReq->GetAllResponseHeaders();
+
+        if(statusCode == 302)
+        {
+            if(strAllHeader.Find(TEXT("Set-Cookie")) != -1)
+            {
+                m_InfoCtl.SetWindowText(TEXT("账户激活成功\r\n可登录\r\n也可设置信息获得积分"));
+
+                ShowButton(BTN_LOGIN);
+            }
+        }
+
+    }//end TRy
+    catch (_com_error &e)
+    {
+        try
+        {
+            //打印错误信息
+            AfxMessageBox((LPTSTR)e.Description());
+        }
+        catch (...)
+        {}
+    } 
+}
+
 void CCSDNDlg::OnBtnTest() 
 {
 	// TODO: Add your control notification handler code here
+    if(!GetNewRequest())
+    {
+        AfxMessageBox("初始化Com失败，请联系管理员");
+        return;
+    }
     
-    unsigned unsigned char Pic[1335] = {
-        0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x01, 0x00, 0x01, 
-            0x00, 0x01, 0x00, 0x00, 0xFF, 0xDB, 0x00, 0x43, 0x00, 0x06, 0x04, 0x05, 0x06, 0x05, 0x04, 0x06, 
-            0x06, 0x05, 0x06, 0x07, 0x07, 0x06, 0x08, 0x0A, 0x10, 0x0A, 0x0A, 0x09, 0x09, 0x0A, 0x14, 0x0E, 
-            0x0F, 0x0C, 0x10, 0x17, 0x14, 0x18, 0x18, 0x17, 0x14, 0x16, 0x16, 0x1A, 0x1D, 0x25, 0x1F, 0x1A, 
-            0x1B, 0x23, 0x1C, 0x16, 0x16, 0x20, 0x2C, 0x20, 0x23, 0x26, 0x27, 0x29, 0x2A, 0x29, 0x19, 0x1F, 
-            0x2D, 0x30, 0x2D, 0x28, 0x30, 0x25, 0x28, 0x29, 0x28, 0xFF, 0xDB, 0x00, 0x43, 0x01, 0x07, 0x07, 
-            0x07, 0x0A, 0x08, 0x0A, 0x13, 0x0A, 0x0A, 0x13, 0x28, 0x1A, 0x16, 0x1A, 0x28, 0x28, 0x28, 0x28, 
-            0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 
-            0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 
-            0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0x28, 0xFF, 0xC0, 
-            0x00, 0x11, 0x08, 0x00, 0x14, 0x00, 0x46, 0x03, 0x01, 0x22, 0x00, 0x02, 0x11, 0x01, 0x03, 0x11, 
-            0x01, 0xFF, 0xC4, 0x00, 0x1F, 0x00, 0x00, 0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 
-            0x0A, 0x0B, 0xFF, 0xC4, 0x00, 0xB5, 0x10, 0x00, 0x02, 0x01, 0x03, 0x03, 0x02, 0x04, 0x03, 0x05, 
-            0x05, 0x04, 0x04, 0x00, 0x00, 0x01, 0x7D, 0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 
-            0x31, 0x41, 0x06, 0x13, 0x51, 0x61, 0x07, 0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xA1, 0x08, 0x23, 
-            0x42, 0xB1, 0xC1, 0x15, 0x52, 0xD1, 0xF0, 0x24, 0x33, 0x62, 0x72, 0x82, 0x09, 0x0A, 0x16, 0x17, 
-            0x18, 0x19, 0x1A, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 
-            0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 
-            0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 
-            0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 
-            0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 
-            0xB8, 0xB9, 0xBA, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2, 0xD3, 0xD4, 0xD5, 
-            0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA, 0xF1, 
-            0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFF, 0xC4, 0x00, 0x1F, 0x01, 0x00, 0x03, 
-            0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 
-            0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0xFF, 0xC4, 0x00, 0xB5, 0x11, 0x00, 
-            0x02, 0x01, 0x02, 0x04, 0x04, 0x03, 0x04, 0x07, 0x05, 0x04, 0x04, 0x00, 0x01, 0x02, 0x77, 0x00, 
-            0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21, 0x31, 0x06, 0x12, 0x41, 0x51, 0x07, 0x61, 0x71, 0x13, 
-            0x22, 0x32, 0x81, 0x08, 0x14, 0x42, 0x91, 0xA1, 0xB1, 0xC1, 0x09, 0x23, 0x33, 0x52, 0xF0, 0x15, 
-            0x62, 0x72, 0xD1, 0x0A, 0x16, 0x24, 0x34, 0xE1, 0x25, 0xF1, 0x17, 0x18, 0x19, 0x1A, 0x26, 0x27, 
-            0x28, 0x29, 0x2A, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 
-            0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 
-            0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 
-            0x89, 0x8A, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 
-            0xA7, 0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3, 0xC4, 
-            0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xE2, 
-            0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 
-            0xFA, 0xFF, 0xDA, 0x00, 0x0C, 0x03, 0x01, 0x00, 0x02, 0x11, 0x03, 0x11, 0x00, 0x3F, 0x00, 0xF5, 
-            0x7D, 0x6B, 0x52, 0x8F, 0x4C, 0xD3, 0xEF, 0x2E, 0x27, 0x67, 0xF2, 0xED, 0xE2, 0x69, 0x4E, 0xD5, 
-            0xCB, 0xE0, 0x02, 0x70, 0x39, 0x1C, 0xF1, 0xC1, 0xFC, 0xEB, 0x88, 0x87, 0xC6, 0x1E, 0x23, 0x8B, 
-            0x47, 0x8B, 0x5C, 0xD6, 0x2C, 0x34, 0xD4, 0xD0, 0xA6, 0x31, 0x92, 0x20, 0x96, 0x41, 0x71, 0x6F, 
-            0x14, 0x92, 0x00, 0x24, 0x7E, 0xA1, 0x86, 0x3B, 0x27, 0x3F, 0x38, 0xE9, 0xC8, 0x1D, 0xC6, 0xA1, 
-            0x04, 0x37, 0x02, 0x4B, 0x7B, 0xD5, 0x8D, 0xD2, 0x58, 0xCA, 0x0F, 0x30, 0x70, 0x47, 0xA1, 0xED, 
-            0xCE, 0x48, 0x23, 0xDB, 0xDE, 0xBC, 0x4E, 0xEB, 0x4C, 0xD1, 0x35, 0x88, 0x62, 0xD1, 0xBC, 0x3F, 
-            0x77, 0xAB, 0xBD, 0xC4, 0x93, 0x8C, 0xE9, 0xF7, 0x4C, 0xC2, 0x2D, 0x38, 0x17, 0x26, 0x49, 0x36, 
-            0x10, 0x06, 0x57, 0xEE, 0xE0, 0xBF, 0xF1, 0x75, 0x26, 0xB3, 0x95, 0xD6, 0xC7, 0x62, 0x3D, 0x92, 
-            0xF7, 0x53, 0xB7, 0xD3, 0xE1, 0xFB, 0x45, 0xC5, 0xCF, 0x93, 0x01, 0xE8, 0x4E, 0xE3, 0x9F, 0x6E, 
-            0xFC, 0xFD, 0x05, 0x2D, 0x8D, 0xED, 0xA6, 0xA5, 0x08, 0xB9, 0xB6, 0xBB, 0x8A, 0x41, 0xC8, 0x0D, 
-            0xBB, 0x04, 0x11, 0xD8, 0xF0, 0x08, 0xEF, 0xF9, 0xFD, 0x2B, 0x9E, 0xF1, 0x13, 0x43, 0x6F, 0xA8, 
-            0xE9, 0x57, 0xB2, 0x42, 0xF2, 0xD8, 0x5B, 0xC9, 0x27, 0x9B, 0xB8, 0x67, 0x69, 0x20, 0x00, 0x48, 
-            0x1E, 0xE3, 0x39, 0xA7, 0xF8, 0x52, 0x41, 0x25, 0xE6, 0xAF, 0x7B, 0x6A, 0x85, 0x2D, 0x2E, 0x9A, 
-            0x31, 0x13, 0x36, 0x10, 0x31, 0x00, 0xEF, 0xE0, 0xFB, 0x9E, 0xA7, 0x19, 0xE7, 0xBE, 0x45, 0x67, 
-            0xED, 0x5F, 0xB4, 0xE5, 0xFF, 0x00, 0x87, 0xDB, 0x7F, 0x4E, 0x84, 0x94, 0xEE, 0x7C, 0x45, 0xAF, 
-            0xEA, 0x3A, 0xCD, 0xE5, 0xBF, 0x85, 0x6D, 0x2D, 0x84, 0x16, 0x0C, 0x62, 0xBC, 0xBB, 0xD4, 0x0B, 
-            0x79, 0x4D, 0x30, 0x3F, 0xEA, 0xD3, 0x1D, 0xC6, 0x39, 0x3F, 0xCB, 0x8C, 0xDE, 0xD0, 0x3C, 0x53, 
-            0x7D, 0xAB, 0xDA, 0x5E, 0x5A, 0xCD, 0xA6, 0xBD, 0xB7, 0x88, 0x6C, 0x48, 0x8E, 0xE2, 0x02, 0x48, 
-            0x8D, 0x58, 0x9E, 0x24, 0xE3, 0x39, 0x4C, 0x64, 0xF7, 0xE9, 0xDF, 0x20, 0x9E, 0x6E, 0xCF, 0x58, 
-            0xB5, 0xF0, 0x56, 0xBD, 0xAB, 0x59, 0xEB, 0x62, 0x4B, 0x7B, 0x7B, 0xBB, 0xD6, 0xD4, 0x2D, 0xEE, 
-            0xFC, 0xB6, 0x74, 0x93, 0x76, 0x37, 0xC7, 0x81, 0x92, 0x08, 0x3E, 0xBD, 0x7D, 0xB8, 0xCD, 0xCF, 
-            0x0C, 0x99, 0xAE, 0x87, 0x88, 0x3C, 0x47, 0xA8, 0x58, 0x4D, 0x6D, 0xA5, 0x6A, 0xBF, 0x67, 0xF2, 
-            0x62, 0x62, 0x4C, 0xAF, 0x0C, 0x71, 0x98, 0xCB, 0x90, 0x3A, 0x02, 0x0E, 0xFE, 0xBD, 0x01, 0xC7, 
-            0x18, 0x27, 0xA6, 0x49, 0x58, 0xB9, 0x2D, 0x0E, 0x82, 0xD2, 0x7D, 0x4E, 0x0D, 0x5A, 0xDE, 0xC7, 
-            0x51, 0x92, 0xD5, 0xE4, 0xBA, 0x05, 0xC4, 0xB6, 0x92, 0xB7, 0xEE, 0xC0, 0x1D, 0x5C, 0x1E, 0xA0, 
-            0x9E, 0x07, 0x4E, 0xFD, 0x6A, 0x6D, 0x7F, 0x5D, 0xBE, 0xB7, 0x9E, 0xDF, 0x4F, 0xD3, 0x60, 0x8E, 
-            0x4D, 0x4E, 0x52, 0x4F, 0x3F, 0x72, 0x34, 0x07, 0xEF, 0xB8, 0xEB, 0x8F, 0x4F, 0x5F, 0xD0, 0xE2, 
-            0x68, 0x82, 0xC9, 0xBC, 0x41, 0x6E, 0xDE, 0x1A, 0x5B, 0x9F, 0xB1, 0x05, 0xCD, 0xE8, 0xE4, 0xC6, 
-            0x3A, 0xEC, 0xC6, 0x79, 0xCF, 0x5F, 0x7F, 0x4E, 0xF5, 0x6F, 0xC4, 0x42, 0x5D, 0x2F, 0x5D, 0x87, 
-            0x55, 0x9D, 0x64, 0x36, 0x46, 0x1F, 0xB1, 0x4C, 0xCA, 0x3F, 0xD4, 0x8D, 0xF9, 0x0E, 0x40, 0xEA, 
-            0x84, 0xFE, 0x5D, 0x3D, 0x05, 0x67, 0x4D, 0xDF, 0x73, 0x9B, 0x99, 0xF2, 0xEE, 0x59, 0x1E, 0x29, 
-            0xB8, 0xD2, 0x6E, 0x64, 0xB7, 0xF1, 0x5A, 0x5B, 0xDB, 0x87, 0x50, 0xF0, 0x5C, 0xDA, 0x89, 0x0C, 
-            0x52, 0x8E, 0xE3, 0xEE, 0xB1, 0xC8, 0xFF, 0x00, 0x3D, 0xB2, 0x57, 0x31, 0xAD, 0x45, 0x27, 0x8C, 
-            0xA6, 0x8A, 0x3D, 0x30, 0x21, 0xB4, 0xB2, 0x04, 0x34, 0xF3, 0xBF, 0x96, 0x8C, 0xED, 0x8E, 0x14, 
-            0x6D, 0x27, 0xA0, 0xFF, 0x00, 0x3C, 0x64, 0xAD, 0x39, 0x11, 0x93, 0x94, 0xEF, 0xA1, 0xE9, 0x5A, 
-            0x82, 0x83, 0x1A, 0xB3, 0x00, 0x4A, 0xB1, 0xC6, 0x7F, 0x1F, 0xF0, 0xAA, 0x89, 0x6C, 0xA2, 0x76, 
-            0x45, 0x67, 0x0A, 0x4E, 0xC3, 0x86, 0xEA, 0x39, 0xA2, 0x8A, 0x50, 0xD8, 0xEB, 0x21, 0x59, 0x59, 
-            0xA1, 0x8A, 0x47, 0x3B, 0x9F, 0xCC, 0x29, 0x93, 0xE9, 0xC7, 0x14, 0xD6, 0x8D, 0x47, 0x9E, 0xB8, 
-            0xFB, 0x87, 0x83, 0xDF, 0xA8, 0x14, 0x51, 0x54, 0x31, 0x56, 0x62, 0xDE, 0x59, 0x75, 0x56, 0xDC, 
-            0x58, 0x9C, 0x8E, 0xA7, 0x9E, 0x7F, 0x5F, 0xD0, 0x54, 0xEE, 0x9E, 0x55, 0x82, 0x3C, 0x6E, 0xEA, 
-            0x59, 0xB9, 0x00, 0xF1, 0xDB, 0xFC, 0x28, 0xA2, 0x81, 0x17, 0xE2, 0x62, 0xCD, 0x13, 0x1E, 0xAC, 
-            0xA7, 0x27, 0xD6, 0xAA, 0xDD, 0x39, 0x86, 0x14, 0xD8, 0x07, 0xCD, 0x98, 0xCE, 0x7F, 0xBB, 0x9E, 
-            0x94, 0x51, 0x51, 0x1D, 0xC0, 0xE7, 0xB5, 0xAD, 0x1A, 0xDA, 0xE5, 0x92, 0xFA, 0x37, 0x9E, 0xD2, 
-            0xF1, 0xD5, 0x51, 0xE5, 0xB5, 0x90, 0xC6, 0x5C, 0x0C, 0xF0, 0x71, 0xC7, 0x61, 0xF9, 0x0A, 0x28, 
-            0xA2, 0xAC, 0xC1, 0xEE, 0x7F, 0xFF, 0xD9
-};
+    //获取用户名
+    char szBuf[MAXBYTE] = {0};
+    m_TestCtl.GetWindowText(szBuf, MAXBYTE);
+    ConvertUserFromMail(szBuf);
+    //OnActiveReg(m_strUser);
+    int nFirst = 0;
+    int nSecond = 0;
+    int nFail = 0;
 
-    //m_CodeDlg.SetPicData("c:\\1.jpg");
-    m_CodeDlg.SetPicData(Pic, sizeof(Pic));
-    m_CodeDlg.DoModal();
+    //开始Request
+    BEGIN_HTTP_REQUEST
+    
+//     for(int i = 0; i < 50; i++)
+//     {
+    //打开主页获得Cookie与关键字符串
+    m_pHttpReq->Open(WEB_GET, TEXT("https://passport.csdn.net/account/login?from=http://my.csdn.net/my/mycsdn"));
 
-    //RandUser();
-    //m_strUser += WEB_MAIL;
-    //m_HtmlCtl.SetWindowText(m_strUser);
+    m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("passport.csdn.net"));
+    m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+    m_pHttpReq->SetRequestHeader(WEB_ACCEPT, WEB_ACCEPT_INFO);
+    m_pHttpReq->SetRequestHeader(WEB_UPGRADE, WEB_UPGRADE_INFO);
+    m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+    m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("http://www.csdn.net/"));
+    m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
+
+
+    Sleep(800);
+    m_pHttpReq->Send();
+
+    //获取回执信息
+    LONG statusCode = m_pHttpReq->GetStatus();
     
-    //TestBaidu();
-// 	for(int i = 0; i < 10000; i++)
-// 	{
-//         RandUser();
-//         OutputDebugString(m_strUser);
-// 	}
+    //获得回执信息
+    _variant_t varRspBody = m_pHttpReq->GetResponseBody();	
+    DWORD dwDataLen = varRspBody.parray->rgsabound[0].cElements;
+    PCHAR pContentBuffer = (PCHAR)varRspBody.parray->pvData;
     
+    string strOut = pContentBuffer;
+    //m_Assist.UnGZip((PBYTE)pContentBuffer, dwDataLen, strOut);
+    
+    //strOut = m_Assist.UTF8ToGBK(strOut);
+
+    string strLt = "";
+    string strExecution = "";
+    string strEventId = "";
+    //匹配LT
+    {
+        regex expressionLT("<input type=\"hidden\" name=\"lt\" value=\"(LT-[0-9a-zA-Z]{0,9}-[0-9a-zA-Z]{0,35})\"");
+        regex expressionLT2("\"(LT-[0-9a-zA-Z]{0,9}-[0-9a-zA-Z]{0,30})\""); // 注意转义方式
+
+        cmatch what;
+        // 如果用 regex_match 方法将需要完全匹配，
+        // 不能在字符串中找寻模式，可用于验证输入
+        if (!regex_search(strOut.c_str(), what, expressionLT))
+        {
+            OutputDebugString("第一种未匹配, 换第二种");
+            if(!regex_search(strOut.c_str(), what, expressionLT))
+            {
+                OutputDebugString("两种均为匹配上");
+                nFail++;
+                //continue;
+            }
+            nSecond ++;
+        }
+
+        nFirst++;
+        strLt = what[1];
+        OutputDebugString(strLt.c_str());
+    }
+
+    //匹配Execution
+    {
+        regex expressionLT("<input type=\"hidden\" name=\"execution\" value=\"([0-9a-zA-Z]{0,9})\"");
+        regex expressionLT2("\"([0-9a-zA-Z]{0,9})\""); // 注意转义方式
+        
+        cmatch what;
+        // 如果用 regex_match 方法将需要完全匹配，
+        // 不能在字符串中找寻模式，可用于验证输入
+        if (!regex_search(strOut.c_str(), what, expressionLT))
+        {
+            OutputDebugString("第一种未匹配, 换第二种");
+            if(!regex_search(strOut.c_str(), what, expressionLT))
+            {
+                OutputDebugString("两种均为匹配上");
+                nFail++;
+                //continue;
+            }
+            nSecond ++;
+        }
+        
+        nFirst++;
+        strExecution = what[1];
+        OutputDebugString(strExecution.c_str());
+    }
+
+    //匹配_eventId
+    {
+        regex expressionLT("<input type=\"hidden\" name=\"_eventId\" value=\"([0-9a-zA-Z]{0,9})\"");
+        regex expressionLT2("\"([0-9a-zA-Z]{0,9})\""); // 注意转义方式
+        
+        cmatch what;
+        // 如果用 regex_match 方法将需要完全匹配，
+        // 不能在字符串中找寻模式，可用于验证输入
+        if (!regex_search(strOut.c_str(), what, expressionLT))
+        {
+            OutputDebugString("第一种未匹配, 换第二种");
+            if(!regex_search(strOut.c_str(), what, expressionLT))
+            {
+                OutputDebugString("两种均为匹配上");
+                nFail++;
+                //continue;
+            }
+            nSecond ++;
+        }
+        
+        nFirst++;
+        strEventId = what[1];
+        OutputDebugString(strEventId.c_str());
+    }
+    //}//End FOR
+
+    //获取验证码
+    CString strValidateCode = TEXT("");
+    if(!GetVerifyCode(strValidateCode))
+        return;
+
+    m_pHttpReq->Open(WEB_POST, TEXT("https://passport.csdn.net/account/login?from=http://my.csdn.net/my/mycsdn"));
+
+    m_pHttpReq->SetRequestHeader(WEB_CACHE_CONTROL, TEXT("max-age=0"));
+    m_pHttpReq->SetRequestHeader(TEXT("Origin"), TEXT("https://passport.csdn.net"));
+    m_pHttpReq->SetRequestHeader(TEXT("Content-Type"), TEXT("application/x-www-form-urlencoded"));
+    m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("https://passport.csdn.net/account/login?from=http://my.csdn.net/my/mycsdn"));
+
+    CString strPostBody = TEXT("");
+
+    //用户名， 密码， 验证码， LT, Execution, EventID
+    strPostBody.Format(TEXT("username=%s&password=123456&validateCode=%s&lt=%s&execution=%s&_eventId=%s"),
+                        m_strUser,
+                        strValidateCode,
+                        strLt.c_str(),
+                        strExecution.c_str(),
+                        strEventId.c_str());
+
+    m_pHttpReq->Send((_bstr_t)strPostBody);
+
+    BSTR bstrResponse = NULL;
+
+    m_pHttpReq->GetResponseHeader(TEXT("Cookie"), &bstrResponse);
+    CString strCookie = bstrResponse;
+
+    //保存Cookie
+    try
+    {
+        CFile file(TEXT("C:\\") + m_strUser, CFile::modeCreate | CFile::modeWrite);
+        file.Write(strCookie, strCookie.GetLength());
+
+        file.Flush();
+        file.Close();
+    }
+    catch(...){}
+
+
+    //结束Request
+    END_HTTP_REQUEST
+
+    CString strOver = "";
+    strOver.Format("第一种匹配: %d次，第二种匹配: %d次，未匹配上: %d.", nFirst, nSecond, nFail);
+    OutputDebugString(strOver);
 }
+
+BOOL CCSDNDlg::GetNewRequest()
+{
+    //释放原有
+    if(m_pHttpReq != NULL)
+        m_pHttpReq.Release();
+
+    //申请新的
+    HRESULT hr = m_pHttpReq.CreateInstance(__uuidof(WinHttpRequest));
+    if (FAILED(hr)) 
+    {
+        AfxMessageBox(TEXT("导入Com失败，请联系管理员!"));
+        return FALSE;
+    }
+
+    m_Assist.SetIgnoreHTTPS(m_pHttpReq);
+    m_Assist.SetHttpJmpFlase(m_pHttpReq);
+    m_Assist.SetProxy(m_pHttpReq);
+
+    return TRUE;
+}
+
 void CCSDNDlg::TestBaidu()
 {
 
@@ -582,16 +1084,7 @@ void CCSDNDlg::TestBaidu()
             AfxMessageBox(TEXT("设置代理失败"));
             return;
         }
-CString strSTR = "\
-GET http://passport.csdn.net/account/register?action=registerView&service=http://www.csdn.net HTTP/1.1\
-Host: passport.csdn.net\
-Connection: keep-alive\
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\
-Upgrade-Insecure-Requests: 1\
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36\
-Referer: http://passport.csdn.net/account/mobileregister?action=mobileRegister\
-Accept-Encoding: gzip, deflate, sdch\
-Accept-Language: zh-CN,zh;q=0.8";
+
         //设置HTTP头
         m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("passport.csdn.net"));
         m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
@@ -646,10 +1139,4 @@ Accept-Language: zh-CN,zh;q=0.8";
         }
         catch (...){}
     } 
-}
-
-void CCSDNDlg::OnBtnGetCode() 
-{
-    
-	
 }

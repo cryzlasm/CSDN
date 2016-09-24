@@ -21,9 +21,11 @@
 #pragma warning(disable: 4996)	//	报不安全函数警告
 #endif
 
+#include <boost\regex.hpp>
 
 #include <map>
 #include <string>
+
 
 #define INLINE  inline
 
@@ -71,7 +73,10 @@ public:
     INLINE BOOL StrToNum(tstring strNum, LONG& lRet);
 
     //忽略HTTPS不信任
-    INLINE HRESULT IgnoreHTTPS(IWinHttpRequestPtr& pObj);
+    INLINE HRESULT SetIgnoreHTTPS(IWinHttpRequestPtr& pObj);
+
+    //设置禁用302跳转
+    INLINE HRESULT SetHttpJmpFlase(IWinHttpRequestPtr& pObj);
 
     //设置访问代理(调试用)
     INLINE HRESULT SetProxy(IWinHttpRequestPtr& pObj, _bstr_t bstrProxy = TEXT("127.0.0.1:8888"));
@@ -84,7 +89,7 @@ public:
     //定义获取Get返回字符串的数据
     INLINE BOOL Get_WinHttp_RspString(IWinHttpRequestPtr& pObj, std::string& strDst);
 
-    //获取指定字符串，前后标志中间的数据
+    //获取指定字符串，前后标志中间的数据, 不包含，则剔除关键字
     //源数据，左标志，又标志，是否包含左边标志长度，是否包含右边标志长度
     INLINE std::string GetMidStrByLAndR(const std::string& strSrc, std::string strLeft, std::string strRight, BOOL bIncludeStart = FALSE, BOOL bIncludeEnd = FALSE);
     
@@ -111,50 +116,9 @@ public:
     //Zlib Gzip
     INLINE BOOL httpgzdecompress(BYTE *zdata, DWORD nzdata,                 
                                  BYTE *data, DWORD *ndata);
-    INLINE BOOL HttpGzDecompress(BYTE *zdata, DWORD nzdata, std::string& outstr);
+    INLINE BOOL UnGZip(BYTE *zdata, DWORD nzdata, std::string& outstr);
 
-    //chunked
-    INLINE std::string ParseChunk(std::string& input);
 };
-
-INLINE std::string CAssist::ParseChunk(std::string&input)
-{
-    char* pdata = (char*)input.c_str();
-    char* pdataend = pdata + input.size();
-    char* pchunkflag = strstr(pdata, "Transfer-Encoding: chunked");
-    if (!pchunkflag)
-        return input;
-    char* pStart = strstr(pdata,"\r\n\r\n");
-    std::string result = "";
-    if ( pStart && ( pStart += 4) < pdataend)
-    {
-        char* pEnd = 0;
-        do{
-            pEnd = strstr( pStart, "\r\n");
-            if (pEnd)
-            {
-                std::string hexsize(pStart);
-                hexsize = hexsize.substr(0, pEnd - pStart);
-                char* str;
-                long lSize = strtol( hexsize.c_str(), &str, 16);
-                if ( !lSize) 
-                    break;
-
-                if ( pEnd + 2 + lSize < pdataend )
-                {
-                    pEnd += 2;
-                    result.append( input.substr( pEnd - pStart, lSize ) );
-                    pStart = pEnd + lSize;
-                }
-                else
-                    break;
-            }
-            else
-                break;
-        }while(pStart && pEnd);
-    }
-    return result;
-}
 
 INLINE BOOL CAssist::httpgzdecompress(BYTE *zdata, DWORD nzdata,                 
                                   BYTE *data, DWORD *ndata)
@@ -201,7 +165,7 @@ INLINE BOOL CAssist::httpgzdecompress(BYTE *zdata, DWORD nzdata,
     return TRUE;
 }
 
-INLINE BOOL CAssist::HttpGzDecompress(BYTE *zdata, DWORD nzdata, std::string& outstr)
+INLINE BOOL CAssist::UnGZip(BYTE *zdata, DWORD nzdata, std::string& outstr)
 {
     int nTimes = 4;
     uLong uReqLen = nzdata, realLen = 0;
@@ -415,6 +379,7 @@ INLINE BOOL CAssist::Get_WinHttp_RspString(IWinHttpRequestPtr& pObj, std::string
     ULONG dataLen = varRspBody.parray->rgsabound[0].cElements;				
     char *pContentBuffer = (char *)varRspBody.parray->pvData;				
     strDst = pContentBuffer;
+    return TRUE;
 }
 
 //得到标志中间的字符串
@@ -536,7 +501,7 @@ INLINE HRESULT CAssist::SetProxy(IWinHttpRequestPtr& pObj, _bstr_t bstrProxy)
 }
 
 //设置忽略Https 警告
-INLINE HRESULT CAssist::IgnoreHTTPS(IWinHttpRequestPtr& pObj)
+INLINE HRESULT CAssist::SetIgnoreHTTPS(IWinHttpRequestPtr& pObj)
 {
     //设置忽略HTTPS不信任
     try
@@ -548,6 +513,18 @@ INLINE HRESULT CAssist::IgnoreHTTPS(IWinHttpRequestPtr& pObj)
     {
         
     }
+    return S_OK;
+}
+
+//设置禁用302跳转
+INLINE HRESULT CAssist::SetHttpJmpFlase(IWinHttpRequestPtr& pObj)
+{
+    //302自动跳转机制，默认为开启，设置为不开启
+    //COleVariant varFalse = VARIANT_FALSE;
+    //pHttpReq->put_Option(WinHttpRequestOption_EnableRedirects, varFalse);
+	pObj->Option[WinHttpRequestOption_EnableRedirects] = VARIANT_FALSE;
+
+
     return S_OK;
 }
 

@@ -57,8 +57,15 @@ END_MESSAGE_MAP()
 void CGetCodeDlg::OnOK() 
 {
 	// TODO: Add extra validation here
-	
-	CDialog::OnOK();
+	UpdateData(TRUE);
+
+    if(m_strGetCode.IsEmpty())
+    {
+        AfxMessageBox(TEXT("«Î ‰»Î—È÷§¬Î"));
+        return;
+    }
+    else
+	    CDialog::OnOK();
 }
 
 BOOL CGetCodeDlg::ShowPicInMem(int x, int y)
@@ -354,6 +361,8 @@ BOOL CGetCodeDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
     
+    m_strGetCode = TEXT("");
+    UpdateData(FALSE);
     
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -386,3 +395,7 @@ void CGetCodeDlg::OnPaint()
     // Do not call CDialog::OnPaint() for painting messages
 }
 
+CString CGetCodeDlg::GetInputCode() CONST
+{
+    return m_strGetCode;
+}
