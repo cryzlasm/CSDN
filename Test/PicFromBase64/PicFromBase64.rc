@@ -50,7 +50,7 @@ BEGIN
     "LANGUAGE 4, 2\r\n"
     "#pragma code_page(936)\r\n"
     "#endif //_WIN32\r\n"
-    "#include ""res\\CSDN.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""res\\PicFromBase64.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "#include ""l.chs\\afxres.rc""          // Standard components\r\n"
     "#endif\r\n"
     "\0"
@@ -66,7 +66,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON    DISCARDABLE     "res\\CSDN.ico"
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\PicFromBase64.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -75,44 +75,25 @@ IDR_MAINFRAME           ICON    DISCARDABLE     "res\\CSDN.ico"
 
 IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "关于 CSDN"
+CAPTION "关于 PicFromBase64"
 FONT 9, "宋体"
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "CSDN 1.0 版",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "PicFromBase64 1.0 版",IDC_STATIC,40,10,119,8,
+                    SS_NOPREFIX
     LTEXT           "版权所有 (C) 2016",IDC_STATIC,40,25,119,8
     DEFPUSHBUTTON   "确定",IDOK,178,7,50,14,WS_GROUP
 END
 
-IDD_CSDN_DIALOG DIALOGEX 0, 0, 367, 295
+IDD_PICFROMBASE64_DIALOG DIALOGEX 0, 0, 320, 200
 STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "CSDN 注册器， 密码默认：123456"
+CAPTION "PicFromBase64"
 FONT 9, "宋体"
 BEGIN
-    PUSHBUTTON      "填资料",IDC_BTN_SET,22,125,62,21
-    PUSHBUTTON      "获取积分",IDC_BTN_SAVE,22,161,62,21
-    DEFPUSHBUTTON   "注册",IDC_BTN_REG,22,17,62,21
-    PUSHBUTTON      "登录",IDC_BTN_LOGIN,22,89,62,21
-    CTEXT           "信息",IDC_STATIC_INFO,22,201,322,49,SS_CENTERIMAGE
-    PUSHBUTTON      "TEST",IDC_BTN_TEST,17,265,50,14
-    EDITTEXT        IDC_EDIT_HTML,103,17,241,131,ES_MULTILINE | 
-                    ES_AUTOVSCROLL | WS_VSCROLL
-    EDITTEXT        IDC_EDIT_TEST,83,259,118,23,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_REG_USER,161,164,150,21,ES_AUTOHSCROLL
-    CTEXT           "账户：",IDC_STATIC,107,164,30,21,SS_CENTERIMAGE
-    PUSHBUTTON      "激活",IDC_BTN_ACTIVE,22,53,62,21
-END
-
-IDD_DLG_GET_CODE DIALOG DISCARDABLE  0, 0, 129, 99
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "验证码"
-FONT 10, "System"
-BEGIN
-    EDITTEXT        IDC_EDIT_GET_CODE,20,48,89,15,ES_CENTER | ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "提交",IDOK,39,72,50,14
-    CTEXT           "验证码：",IDC_STATIC,20,14,34,15,SS_CENTERIMAGE
-    CONTROL         "",IDC_STATIC_GET_CODE,"Static",SS_BITMAP,55,15,59,23
+    PUSHBUTTON      "Button1",IDC_BUTTON1,81,49,50,14
+    EDITTEXT        IDC_EDIT1,76,96,152,81,ES_MULTILINE | ES_AUTOHSCROLL
+    PUSHBUTTON      "Button2",IDC_BUTTON2,171,49,50,14
 END
 
 
@@ -140,13 +121,13 @@ BEGIN
         BLOCK "080404B0"
         BEGIN
             VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "CSDN Microsoft 基础类应用程序\0"
+            VALUE "FileDescription", "PicFromBase64 Microsoft 基础类应用程序\0"
             VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "CSDN\0"
+            VALUE "InternalName", "PicFromBase64\0"
             VALUE "LegalCopyright", "版权所有 (C) 2016\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "CSDN.EXE\0"
-            VALUE "ProductName", "CSDN 应用程序\0"
+            VALUE "OriginalFilename", "PicFromBase64.EXE\0"
+            VALUE "ProductName", "PicFromBase64 应用程序\0"
             VALUE "ProductVersion", "1, 0, 0, 1\0"
         END
     END
@@ -175,20 +156,12 @@ BEGIN
         BOTTOMMARGIN, 48
     END
 
-    IDD_CSDN_DIALOG, DIALOG
+    IDD_PICFROMBASE64_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 359
+        RIGHTMARGIN, 313
         TOPMARGIN, 7
-        BOTTOMMARGIN, 288
-    END
-
-    IDD_DLG_GET_CODE, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 122
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 92
+        BOTTOMMARGIN, 193
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -201,7 +174,7 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_ABOUTBOX            "关于 CSDN(&A)..."
+    IDS_ABOUTBOX            "关于 PicFromBase64(&A)..."
 END
 
 #endif    // Chinese (P.R.C.) resources
@@ -224,7 +197,7 @@ END
 LANGUAGE 4, 2
 #pragma code_page(936)
 #endif //_WIN32
-#include "res\CSDN.rc2"  // non-Microsoft Visual C++ edited resources
+#include "res\PicFromBase64.rc2"  // non-Microsoft Visual C++ edited resources
 #include "l.chs\afxres.rc"          // Standard components
 #endif
 

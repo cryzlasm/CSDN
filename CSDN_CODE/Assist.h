@@ -96,6 +96,9 @@ public:
     //获得COOKIES
     INLINE tstring GetCookieString(tstring strRspHeader, MAP<tstring, tstring>& CookieMap, BOOL bAllGet = FALSE);
 
+    //获得Post调用之后的Cookie
+    //INLINE tstring GetPostCookie(IWinHttpRequestPtr& pObj);
+
     //获得时间戳
     INLINE LONG GetTimer();
 
@@ -118,7 +121,113 @@ public:
                                  BYTE *data, DWORD *ndata);
     INLINE BOOL UnGZip(BYTE *zdata, DWORD nzdata, std::string& outstr);
 
+
+
+
+    //BASE64编码， 字符串地址， 字符串长度
+    INLINE std::string EnCode(const char* Data,int DataByte);
+    
+    //BASE64解码, 字符串地址，字符串长度，解码后的长度，
+    //暂不支持解码后内容为\0
+    INLINE std::string DeCode(const char* Data,int DataByte,int& OutByte);
+
 };
+
+INLINE std::string CAssist::EnCode(const char* Data,int DataByte)
+{
+    const unsigned char* pData = (const unsigned char*)Data;
+    
+    //编码表
+    const char EncodeTable[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    //返回值
+    std::string strEncode;
+    unsigned char Tmp[4]={0};
+    int LineLength=0;
+    for(int i=0;i<(int)(DataByte / 3);i++)
+    {
+        Tmp[1] = *pData++;
+        Tmp[2] = *pData++;
+        Tmp[3] = *pData++;
+        strEncode+= EncodeTable[Tmp[1] >> 2];
+        strEncode+= EncodeTable[((Tmp[1] << 4) | (Tmp[2] >> 4)) & 0x3F];
+        strEncode+= EncodeTable[((Tmp[2] << 2) | (Tmp[3] >> 6)) & 0x3F];
+        strEncode+= EncodeTable[Tmp[3] & 0x3F];
+        if(LineLength+=4,LineLength==76) {strEncode+="\r\n";LineLength=0;}
+    }
+    //对剩余数据进行编码
+    int Mod=DataByte % 3;
+    if(Mod==1)
+    {
+        Tmp[1] = *pData++;
+        strEncode+= EncodeTable[(Tmp[1] & 0xFC) >> 2];
+        strEncode+= EncodeTable[((Tmp[1] & 0x03) << 4)];
+        strEncode+= "==";
+    }
+    else if(Mod==2)
+    {
+        Tmp[1] = *pData++;
+        Tmp[2] = *pData++;
+        strEncode+= EncodeTable[(Tmp[1] & 0xFC) >> 2];
+        strEncode+= EncodeTable[((Tmp[1] & 0x03) << 4) | ((Tmp[2] & 0xF0) >> 4)];
+        strEncode+= EncodeTable[((Tmp[2] & 0x0F) << 2)];
+        strEncode+= "=";
+    }
+    
+    return strEncode;
+}
+
+INLINE std::string CAssist::DeCode(const char* Data,int DataByte,int& OutByte)
+{
+    //解码表
+    const char DecodeTable[] =
+    {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        62, // '+'
+        0, 0, 0,
+        63, // '/'
+        52, 53, 54, 55, 56, 57, 58, 59, 60, 61, // '0'-'9'
+        0, 0, 0, 0, 0, 0, 0,
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, // 'A'-'Z'
+        0, 0, 0, 0, 0, 0,
+        26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
+        39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, // 'a'-'z'
+    };
+    //返回值
+    std::string strDecode;
+    int nValue;
+    int i= 0;
+    while (i < DataByte)
+    {
+        if (*Data != '\r' && *Data!='\n')
+        {
+            nValue = DecodeTable[*Data++] << 18;
+            nValue += DecodeTable[*Data++] << 12;
+            strDecode+=(nValue & 0x00FF0000) >> 16;
+            OutByte++;
+            if (*Data != '=')
+            {
+                nValue += DecodeTable[*Data++] << 6;
+                strDecode+=(nValue & 0x0000FF00) >> 8;
+                OutByte++;
+                if (*Data != '=')
+                {
+                    nValue += DecodeTable[*Data++];
+                    strDecode+=nValue & 0x000000FF;
+                    OutByte++;
+                }
+            }
+            i += 4;
+        }
+        else// 回车换行,跳过
+        {
+            Data++;
+            i++;
+        }
+    }
+    return strDecode;
+}
 
 INLINE BOOL CAssist::httpgzdecompress(BYTE *zdata, DWORD nzdata,                 
                                   BYTE *data, DWORD *ndata)
@@ -233,6 +342,7 @@ INLINE tstring CAssist::GetCookieString(tstring strRspHeader, MAP<tstring, tstri
                     //获取SetCookie信息  从头 到 分号
                     strDst = GetMidStrByLAndR(strTmp, strKey, TEXT(";"), FALSE, TRUE);
 
+                    //加入CookieMap，主要是为了覆盖新的Cookie 到旧 Cookie
                     CookieToMap(strDst, CookieMap);
                     //retCookie += strDst + TEXT(" ");
                 }
@@ -276,7 +386,7 @@ INLINE BOOL CAssist::CookieToMap(tstring strCookie, MAP<tstring, tstring>& Cooki
         //得到等号前边的字段，
         strHead = strTmp.substr(0, nSplit);
         
-        //得到登号后边的字段
+        //得到等号后边的字段
         strBody = strTmp.substr(nSplit + 1, strTmp.length() - nSplit - 2);
         
         //增加哈希表

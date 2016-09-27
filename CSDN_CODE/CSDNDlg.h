@@ -26,6 +26,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CCSDNDlg)
 	enum { IDD = IDD_CSDN_DIALOG };
+	CButton	m_BtnActiveCtl;
 	CButton	m_BtnSetCtl;
 	CButton	m_BtnSaveCtl;
 	CButton	m_BtnRegCtl;
@@ -89,6 +90,21 @@ public:
     //释放原有Request，实例新的Request
     BOOL GetNewRequest();
 
+    //Cookie缓存本地
+    CString m_strHostCookie;
+
+    //账户是否激活
+    BOOL m_bIsUserActive;
+
+    //账户是否登录
+    BOOL m_bIsUserLogin;
+
+    //临时数据存储区，也临时存储错误返回信息
+    CString m_strTmpBuf;
+
+    //是否创建目录
+    BOOL PathIsOk(CString& strFolderPath);
+
 // Implementation
 protected:
 	HICON m_hIcon;
@@ -105,15 +121,17 @@ protected:
 	afx_msg void OnBtnLogin();
 	afx_msg void OnBtnSet();
 	afx_msg void OnBtnTest();
+	afx_msg void OnBtnActive();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
     enum _BtnName
     {
-        BTN_REG,    //注册
-        BTN_SET,    //设置
-        BTN_SAVE,   //保存
-        BTN_LOGIN   //登录
+        BTN_REG     = 0X1,    //注册
+        BTN_SET     = 0X2,    //设置
+        BTN_SAVE    = 0X4,    //保存
+        BTN_LOGIN   = 0X8,    //登录
+        BTN_ACTIVE  = 0X10    //激活
     };
 };
 
