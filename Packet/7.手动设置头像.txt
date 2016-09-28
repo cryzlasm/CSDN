@@ -1,0 +1,10 @@
+//打开主页，获得Cookie
+
+//获取验证码
+
+//登录获取Cookie
+jmgvGc
+jmgvGc@spambog.com
+
+//COOKIE
+Cookie: AU=B87; BT=1474899371844; CASTGC=TGT-26689-uWHi0JTTVDss9G72HfH1JM6CHxnqc6PiZFRlNXjhnqyv7vYngw-passport.csdn.net; UE="jmgvGc@spambog.com"; UN=jmgvGc; UserInfo=F%2Ff0WbVBcujhJ1XS0uCM%2BNP51ZanKsW2NEbNP12%2BOUy7ksFG%2ByBgRM75wMUrqQ9gHtvCcUxSlqVe2JdyRBnTOUzwsDM%2FvsuqzsHS8wlfdH30etdpAU9rzcob2Pb9%2BTpm; UserName=jmgvGc; UserNick=jmgvGc; access-token=612b74f0-4581-405d-80aa-fae12f5d58af

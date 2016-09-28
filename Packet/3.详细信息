@@ -1,0 +1,145 @@
+//设置熟悉领域
+GET http://my.csdn.net/service/main/do_confirm_knownarea?username=njwzvh&areaid=10593056&fromBI=0&method=saveSkill&skillname=%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F&skilllevel=0 HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Accept: application/json, text/javascript, */*; q=0.01
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Referer: http://my.csdn.net/njwzvh
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: uuid_tt_dd=2374975261751004143_20160831; bdshare_firstime=1474549852063; __message_district_code=420000; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1474708368,1474711667,1474893111,1474894405; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474894405; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; _ga=GA1.2.90815613.1473425003; _gat=1; UserName=NjwZVH; UserInfo=rB4nWEtgVide%2B4qFhcUiRCRWh65Qjv9opDwjbHlPsM5yXtKq08i3%2FlqwAa2rRCcgzhbYGcdBkOPZLiv8IchST8nJyKc4rGhW%2B0OdZgA5aikAjcYMjzPRKTMEQ9bwk2G9; UserNick=NjwZVH; AU=D6E; UN=NjwZVH; UE="NjwZVH@spambog.com"; BT=1474894445586; access-token=54c146b5-bc8f-4f44-be65-caf65069fd35; dc_tos=oe446k; dc_session_id=1474894431364
+
+
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:02:13 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 53
+
+{"err":0,"msg":"ok","result":{"interestid":10593056}}
+
+------------------------------------------------------------------
+//设置专业技能
+POST http://my.csdn.net/service/main/uc HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Content-Length: 125
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://my.csdn.net
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://my.csdn.net/njwzvh
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: uuid_tt_dd=2374975261751004143_20160831; bdshare_firstime=1474549852063; __message_district_code=420000; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1474708368,1474711667,1474893111,1474894405; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474894405; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; _ga=GA1.2.90815613.1473425003; _gat=1; UserName=NjwZVH; UserInfo=rB4nWEtgVide%2B4qFhcUiRCRWh65Qjv9opDwjbHlPsM5yXtKq08i3%2FlqwAa2rRCcgzhbYGcdBkOPZLiv8IchST8nJyKc4rGhW%2B0OdZgA5aikAjcYMjzPRKTMEQ9bwk2G9; UserNick=NjwZVH; AU=D6E; UN=NjwZVH; UE="NjwZVH@spambog.com"; BT=1474894445586; access-token=54c146b5-bc8f-4f44-be65-caf65069fd35; dc_tos=oe446k; dc_session_id=1474894431364
+
+params=%7B%22skillname%22%3A%22Python%22%2C%22skilllevel%22%3A%221%22%2C%22method%22%3A%22saveSkill%22%2C%22skillid%22%3A0%7D
+
+
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:02:32 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 50
+
+{"err":0,"msg":"ok","result":{"skillid":34643612}}
+
+------------------------------------------------------------------
+//设置联系方式
+POST http://my.csdn.net/service/main/uc HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Content-Length: 342
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://my.csdn.net
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://my.csdn.net/njwzvh
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: uuid_tt_dd=2374975261751004143_20160831; bdshare_firstime=1474549852063; __message_district_code=420000; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1474708368,1474711667,1474893111,1474894405; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474894405; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; _ga=GA1.2.90815613.1473425003; _gat=1; UserName=NjwZVH; UserInfo=rB4nWEtgVide%2B4qFhcUiRCRWh65Qjv9opDwjbHlPsM5yXtKq08i3%2FlqwAa2rRCcgzhbYGcdBkOPZLiv8IchST8nJyKc4rGhW%2B0OdZgA5aikAjcYMjzPRKTMEQ9bwk2G9; UserNick=NjwZVH; AU=D6E; UN=NjwZVH; UE="NjwZVH@spambog.com"; BT=1474894445586; access-token=54c146b5-bc8f-4f44-be65-caf65069fd35; dc_tos=oe446k; dc_session_id=1474894431364
+
+params=%7B%22method%22%3A%22saveUserContact%22%2C%22username%22%3A%22njwzvh%22%2C%22contactinfo%22%3A%5B%7B%22contactid%22%3A0%2C%22value%22%3A%22123456%22%2C%22type%22%3A70%7D%2C%7B%22contactid%22%3A0%2C%22value%22%3A%22123456%22%2C%22type%22%3A110%7D%5D%2C%22pubemail%22%3A%22NjwZVH%40spambog.com%22%2C%22submobile%22%3A%2213888888888%22%7D
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:03:17 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 20
+
+{"err":0,"msg":"ok"}
+
+------------------------------------------------------------------
+//设置教育经历
+POST http://my.csdn.net/service/main/uc HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Content-Length: 310
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://my.csdn.net
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://my.csdn.net/njwzvh
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: uuid_tt_dd=2374975261751004143_20160831; bdshare_firstime=1474549852063; __message_district_code=420000; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1474708368,1474711667,1474893111,1474894405; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474894405; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; _ga=GA1.2.90815613.1473425003; UserName=NjwZVH; UserInfo=rB4nWEtgVide%2B4qFhcUiRCRWh65Qjv9opDwjbHlPsM5yXtKq08i3%2FlqwAa2rRCcgzhbYGcdBkOPZLiv8IchST8nJyKc4rGhW%2B0OdZgA5aikAjcYMjzPRKTMEQ9bwk2G9; UserNick=NjwZVH; AU=D6E; UN=NjwZVH; UE="NjwZVH@spambog.com"; BT=1474894445586; access-token=54c146b5-bc8f-4f44-be65-caf65069fd35; dc_tos=oe44av; dc_session_id=1474894431364
+
+params=%7B%22schoolname%22%3A%22%E5%AE%B6%E9%87%8C%E8%B9%B2%E5%A4%A7%E5%AD%A6%22%2C%22majorstr%22%3A%22%E5%95%83%E8%80%81%22%2C%22degree%22%3A%221%22%2C%22edustartdate%22%3A%222015-09-01%22%2C%22eduenddate%22%3A%22%22%2C%22eduid%22%3A%220%22%2C%22method%22%3A%22saveEduExp%22%2C%22username%22%3A%22njwzvh%22%7D
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:05:26 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 47
+
+{"err":0,"msg":"ok","result":{"eduid":1469358}}
+
+------------------------------------------------------------------
+//设置工作经历
+POST http://my.csdn.net/service/main/uc HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Content-Length: 298
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://my.csdn.net
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://my.csdn.net/njwzvh
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: uuid_tt_dd=2374975261751004143_20160831; bdshare_firstime=1474549852063; __message_district_code=420000; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1474708368,1474711667,1474893111,1474894405; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474894405; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; _ga=GA1.2.90815613.1473425003; UserName=NjwZVH; UserInfo=rB4nWEtgVide%2B4qFhcUiRCRWh65Qjv9opDwjbHlPsM5yXtKq08i3%2FlqwAa2rRCcgzhbYGcdBkOPZLiv8IchST8nJyKc4rGhW%2B0OdZgA5aikAjcYMjzPRKTMEQ9bwk2G9; UserNick=NjwZVH; AU=D6E; UN=NjwZVH; UE="NjwZVH@spambog.com"; BT=1474894445586; access-token=54c146b5-bc8f-4f44-be65-caf65069fd35; dc_tos=oe44av; dc_session_id=1474894431364
+
+params=%7B%22orgname%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22job%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22workbegindate%22%3A%222016-09-01%22%2C%22workenddate%22%3A%22%22%2C%22workdesc%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22workid%22%3A%220%22%2C%22method%22%3A%22saveWorkExp%22%2C%22username%22%3A%22njwzvh%22%7D
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:06:18 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 48
+
+{"err":0,"msg":"ok","result":{"workid":1543449}}
+
+------------------------------------------------------------------
+

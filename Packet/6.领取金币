@@ -1,0 +1,23 @@
+GET http://my.csdn.net/service/main/do_send_coin HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Accept: application/json, text/javascript, */*; q=0.01
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Referer: http://my.csdn.net/?ref=toolbar
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: uuid_tt_dd=2374975261751004143_20160831; bdshare_firstime=1474549852063; __message_district_code=420000; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1474708368,1474711667,1474893111,1474894405; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474898958; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; _ga=GA1.2.90815613.1473425003; _gat=1; UserName=NjwZVH; UserInfo=rB4nWEtgVide%2B4qFhcUiRCRWh65Qjv9opDwjbHlPsM5yXtKq08i3%2FlqwAa2rRCcgzhbYGcdBkOPZLiv8IchST8nJyKc4rGhW%2B0OdZgA5aikAjcYMjzPRKTMEQ9bwk2G9; UserNick=NjwZVH; AU=D6E; UD=%E6%B2%A1%E5%95%A5%E8%AF%B4%E7%9A%84; UN=NjwZVH; UE="NjwZVH@spambog.com"; BT=1474899129988; access-token=e55d467c-8981-44e9-a526-64519dfdcfc0; dc_tos=oe47fv; dc_session_id=1474899115139
+
+
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 14:12:20 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 20
+
+{"err":0,"msg":"ok"}

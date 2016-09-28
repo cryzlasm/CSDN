@@ -1,0 +1,59 @@
+POST http://my.csdn.net/service/main/uc HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Content-Length: 106
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://my.csdn.net
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://my.csdn.net/njwzvh
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: uuid_tt_dd=2374975261751004143_20160831; bdshare_firstime=1474549852063; __message_district_code=420000; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1474708368,1474711667,1474893111,1474894405; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474894405; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; _ga=GA1.2.90815613.1473425003; UserName=NjwZVH; UserInfo=rB4nWEtgVide%2B4qFhcUiRCRWh65Qjv9opDwjbHlPsM5yXtKq08i3%2FlqwAa2rRCcgzhbYGcdBkOPZLiv8IchST8nJyKc4rGhW%2B0OdZgA5aikAjcYMjzPRKTMEQ9bwk2G9; UserNick=NjwZVH; AU=D6E; UN=NjwZVH; UE="NjwZVH@spambog.com"; BT=1474894445586; access-token=54c146b5-bc8f-4f44-be65-caf65069fd35; dc_tos=oe44et; dc_session_id=1474894431364
+
+params=%7B%22username%22%3A%22njwzvh%22%2C%22method%22%3A%22saveNick%22%2C%22nickname%22%3A%22NjwZVH%22%7D
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:12:33 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 20
+
+{"err":0,"msg":"ok"}
+
+------------------------------------------------------------------
+
+POST http://my.csdn.net/service/main/uc HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Content-Length: 490
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://my.csdn.net
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://my.csdn.net/njwzvh
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: uuid_tt_dd=2374975261751004143_20160831; bdshare_firstime=1474549852063; __message_district_code=420000; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1474708368,1474711667,1474893111,1474894405; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474894405; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; _ga=GA1.2.90815613.1473425003; UserName=NjwZVH; UserInfo=rB4nWEtgVide%2B4qFhcUiRCRWh65Qjv9opDwjbHlPsM5yXtKq08i3%2FlqwAa2rRCcgzhbYGcdBkOPZLiv8IchST8nJyKc4rGhW%2B0OdZgA5aikAjcYMjzPRKTMEQ9bwk2G9; UserNick=NjwZVH; AU=D6E; UN=NjwZVH; UE="NjwZVH@spambog.com"; BT=1474894445586; access-token=54c146b5-bc8f-4f44-be65-caf65069fd35; dc_tos=oe44et; dc_session_id=1474894431364
+
+params=%7B%22nickname%22%3A%22NjwZVH%22%2C%22realname%22%3A%22%E5%8C%BF%E5%90%8D%22%2C%22curjob%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22gender%22%3A%221%22%2C%22birthday%22%3A%222016-09-01%22%2C%22industrytype%22%3A%22400%22%2C%22country%22%3A%221%22%2C%22province%22%3A%22110000%22%2C%22district%22%3A%22110101%22%2C%22city%22%3A%22110100%22%2C%22selfdesc%22%3A%22%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%22%2C%22method%22%3A%22saveDetailInfo%22%2C%22username%22%3A%22njwzvh%22%7D
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:12:33 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Set-Cookie: UD=%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95; expires=Mon, 03-Oct-2016 13:02:02 GMT; Max-Age=604800; path=/; domain=.csdn.net
+Content-Length: 20
+
+{"err":0,"msg":"ok"}
+
+------------------------------------------------------------------
+

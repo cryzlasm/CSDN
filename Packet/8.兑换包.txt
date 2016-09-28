@@ -1,0 +1,87 @@
+
+Cookie:  AU=DD6; BT=1474993197195; CASTGC=TGT-78109-y3e27tMNBwRHKrx3SRixye6ID0MrtkyBcyVt7mRqOvdL0vymPt-passport.csdn.net; UD=%E6%B2%A1%E5%95%A5%E8%AF%B4%E7%9A%84; UE="rKpOaw@spambog.com"; UN=rKpOaw; UserInfo=eoFJGHjP5ZFwYnweQHuC9i3U6cpey9zcUiDNHYI0fjYOP3UpJshRnCP%2FjzrUzv2p0KbFzHlzXo83JriArw%2FuFUCR4Z6h4eD%2FTySpC%2BvbVAn1jUQo0RmnImBw0wSIKxNd; UserName=rKpOaw; UserNick=rKpOaw; access-token=9125d538-2951-40fd-98ec-dd35f042bae8
+
+//==============================
+//判断是否有5个CB
+GET http://mall.csdn.net/cbuy/buy_download_coin HTTP/1.1
+Host: mall.csdn.net
+Connection: keep-alive
+Cache-Control: max-age=0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Referer: http://mall.csdn.net/cbuy
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8
+Cookie:  AU=DAF; BT=1474998479983; CASTGC=TGT-96239-fOopehSOygewAtmDlqWn2mB4cvdQPygWRkcK9onrLMYB5nTfAJ-passport.csdn.net; UD=%E6%B2%A1%E5%95%A5%E8%AF%B4%E7%9A%84; UE="rhhNZo@spambog.com"; UN=rhhNZo; UserInfo=UMfxeSO0PqzJDLwYF2%2FUyVuPScCp5L3I4OqnWPHNRCXcLGRG1I6PI7wDhvrbUJb0PqgjoaQrreHGFlwor7L%2B6VjXw4ZTrQKqg8o06k0TfcmrTkIM4g7nYd4JXxC%2Fp0Fp; UserName=rhhNZo; UserNick=rhhNZo; access-token=b1ef0df7-cf37-47c1-8041-d21ea63016e7
+
+//金币正则-------------
+<label>您当前C币： &nbsp;</label><span><i>0</i></span>
+</label><span><i>([0-9]{0,2})</i></span>
+<i>([0-9]{0,2})</i>
+//金币正则-------------
+
+//==============================
+//获取兑换页面
+GET http://mall.csdn.net/cbuy/get_c_ajax?time=1474993216&post_number=5&c_type=download_coin HTTP/1.1
+Host: mall.csdn.net
+Connection: keep-alive
+Accept: application/json, text/javascript, */*; q=0.01
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/json; charset=utf-8
+Referer: http://mall.csdn.net/cbuy/buy_download_coin
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8
+Cookie:  AU=DD6; BT=1474993197195; CASTGC=TGT-78109-y3e27tMNBwRHKrx3SRixye6ID0MrtkyBcyVt7mRqOvdL0vymPt-passport.csdn.net; UD=%E6%B2%A1%E5%95%A5%E8%AF%B4%E7%9A%84; UE="rKpOaw@spambog.com"; UN=rKpOaw; UserInfo=eoFJGHjP5ZFwYnweQHuC9i3U6cpey9zcUiDNHYI0fjYOP3UpJshRnCP%2FjzrUzv2p0KbFzHlzXo83JriArw%2FuFUCR4Z6h4eD%2FTySpC%2BvbVAn1jUQo0RmnImBw0wSIKxNd; UserName=rKpOaw; UserNick=rKpOaw; access-token=9125d538-2951-40fd-98ec-dd35f042bae8
+
+
+//返回数据
+{"static":1,"data":5,"pay_url":"http:\/\/mall.csdn.net\/cbuy","conversion_url":"http:\/\/mall.csdn.net\/cbuy\/submit_cbuy_do?c_type=download_coin&code=cf33d4da8010a4d802e9f326e691beb3&post_number=5","status":1,"price":5}
+获得一个32 数据
+<a id="go_create_report" href="http://mall.csdn.net/cbuy/submit_cbuy_do?c_type=download_coin&code=257eccd9ce1591fa26a05a3bb5b48a6f&post_number=5">
+
+
+
+//====================
+//获取兑换验证码
+GET http://mall.csdn.net/cbuy/get_v_code?r=1474996171 HTTP/1.1
+Host: mall.csdn.net
+Connection: keep-alive
+Accept: image/webp,image/*,*/*;q=0.8
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Referer: http://mall.csdn.net/cbuy/buy_download_coin
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8
+Cookie:  AU=DD6; BT=1474993197195; CASTGC=TGT-78109-y3e27tMNBwRHKrx3SRixye6ID0MrtkyBcyVt7mRqOvdL0vymPt-passport.csdn.net; UD=%E6%B2%A1%E5%95%A5%E8%AF%B4%E7%9A%84; UE="rKpOaw@spambog.com"; UN=rKpOaw; UserInfo=eoFJGHjP5ZFwYnweQHuC9i3U6cpey9zcUiDNHYI0fjYOP3UpJshRnCP%2FjzrUzv2p0KbFzHlzXo83JriArw%2FuFUCR4Z6h4eD%2FTySpC%2BvbVAn1jUQo0RmnImBw0wSIKxNd; UserName=rKpOaw; UserNick=rKpOaw; access-token=9125d538-2951-40fd-98ec-dd35f042bae8
+
+//====================================================
+%22verify_code%22%3Bs%3A4%3A%22z755%22%3B%7D
+%22verify_code%22%3Bs%3A4%3A%22([a-zA-Z0-9](3,6))%22%3B%7D
+verify_code";s:4:"z755";}
+"verify_code";s:4:"du68";}
+//====================================================
+
+//返回数据
+Set-Cookie: ci_session=a%3A5%3A%7Bs%3A10%3A%22session_id%22%3Bs%3A32%3A%2248182678c78ab1839fa0633927b80f5f%22%3Bs%3A10%3A%22ip_address%22%3Bs%3A13%3A%22172.16.10.201%22%3Bs%3A10%3A%22user_agent%22%3Bs%3A109%3A%22Mozilla%2F5.0+%28Windows+NT+6.1%3B+WOW64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F50.0.2661.102+Safari%2F537.36%22%3Bs%3A13%3A%22last_activity%22%3Bi%3A1474993323%3Bs%3A9%3A%22user_data%22%3Bs%3A0%3A%22%22%3B%7Db65f754dafa467ec94e6f8003cc6dc6b; expires=Tue, 27-Sep-2016 18:22:03 GMT; Max-Age=7200; path=/; domain=csdn.net
+Set-Cookie: ci_session=a%3A6%3A%7Bs%3A10%3A%22session_id%22%3Bs%3A32%3A%2248182678c78ab1839fa0633927b80f5f%22%3Bs%3A10%3A%22ip_address%22%3Bs%3A13%3A%22172.16.10.201%22%3Bs%3A10%3A%22user_agent%22%3Bs%3A109%3A%22Mozilla%2F5.0+%28Windows+NT+6.1%3B+WOW64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F50.0.2661.102+Safari%2F537.36%22%3Bs%3A13%3A%22last_activity%22%3Bi%3A1474993323%3Bs%3A9%3A%22user_data%22%3Bs%3A0%3A%22%22%3Bs%3A11%3A%22verify_code%22%3Bs%3A4%3A%22z755%22%3B%7Ded1d245689c77ed241814d873a9d7975; expires=Tue, 27-Sep-2016 18:22:03 GMT; Max-Age=7200; path=/; domain=csdn.net
+
+//==========================
+//提交验证码兑换积分
+
+GET http://mall.csdn.net/cbuy/submit_cbuy_do?c_type=download_coin&code=cf33d4da8010a4d802e9f326e691beb3&post_number=5&v_code=z755 HTTP/1.1
+Host: mall.csdn.net
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Referer: http://mall.csdn.net/cbuy/buy_download_coin
+Accept-Encoding: gzip, deflate, sdch
+Cookie: ci_session=a%3A6%3A%7Bs%3A10%3A%22session_id%22%3Bs%3A32%3A%2248182678c78ab1839fa0633927b80f5f%22%3Bs%3A10%3A%22ip_address%22%3Bs%3A13%3A%22172.16.10.201%22%3Bs%3A10%3A%22user_agent%22%3Bs%3A109%3A%22Mozilla%2F5.0+%28Windows+NT+6.1%3B+WOW64%29+AppleWebKit%2F537.36+%28KHTML%2C+like+Gecko%29+Chrome%2F50.0.2661.102+Safari%2F537.36%22%3Bs%3A13%3A%22last_activity%22%3Bi%3A1474993323%3Bs%3A9%3A%22user_data%22%3Bs%3A0%3A%22%22%3Bs%3A11%3A%22verify_code%22%3Bs%3A4%3A%22z755%22%3B%7Ded1d245689c77ed241814d873a9d7975; AU=DD6; BT=1474993197195; CASTGC=TGT-78109-y3e27tMNBwRHKrx3SRixye6ID0MrtkyBcyVt7mRqOvdL0vymPt-passport.csdn.net; UD=%E6%B2%A1%E5%95%A5%E8%AF%B4%E7%9A%84; UE="rKpOaw@spambog.com"; UN=rKpOaw; UserInfo=eoFJGHjP5ZFwYnweQHuC9i3U6cpey9zcUiDNHYI0fjYOP3UpJshRnCP%2FjzrUzv2p0KbFzHlzXo83JriArw%2FuFUCR4Z6h4eD%2FTySpC%2BvbVAn1jUQo0RmnImBw0wSIKxNd; UserName=rKpOaw; UserNick=rKpOaw; access-token=9125d538-2951-40fd-98ec-dd35f042bae8
+
+
+<span>CSDN 提示信息</span>\r\n[\u4e00-\u9fa5]{4}
+
+<span>CSDN 提示信息</span>
+兑换成功!<br>
+

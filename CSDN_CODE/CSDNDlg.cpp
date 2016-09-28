@@ -8,6 +8,9 @@
 
 //#include "gzip/zstream.h"
 
+//用户名在12个的位置随机
+#define USER_MAX_LEN 15
+
 
 #include <ATLBASE.H>
 
@@ -404,6 +407,7 @@ void CCSDNDlg::OnBtnReg()
                             WEB_MAIL,
                             strGetCode);
 
+        Sleep(800);
         //发送Post数据
         m_pHttpReq->Send((_bstr_t)strPostBody);
 
@@ -459,6 +463,7 @@ void CCSDNDlg::OnBtnReg()
 
 
         //======================打开注册邮箱提取注册验证==================
+        Sleep(800);
         OnActiveReg(m_strUser);
         if(!m_bIsUserActive)
         {
@@ -559,6 +564,7 @@ BOOL CCSDNDlg::GetVerifyCode(CString& strRetCode)
             m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
             m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, TEXT("zh-CN"));
     
+            Sleep(800);
             //访问验证码
             m_pHttpReq->Send();
 
@@ -591,10 +597,6 @@ BOOL CCSDNDlg::GetVerifyCode(CString& strRetCode)
     return bRet;
 }
 
-
-
-//用户名在12个的位置随机
-#define USER_MAX_LEN 6
 BOOL CCSDNDlg::RandUser()
 {
     //初始化用户名
@@ -613,7 +615,343 @@ BOOL CCSDNDlg::RandUser()
 void CCSDNDlg::OnBtnSave() 
 {
 	// TODO: Add your control notification handler code here
-	
+	//判断是否已经登录，因为需要登录的Cookie
+    if(!m_bIsUserLogin)
+    {
+        AfxMessageBox(TEXT("请先登录，再设置账户信息！"));
+        return;
+    }
+    
+    //获取用户名================================================
+    char szBuf[MAXBYTE] = {0};
+    m_RegUserCtl.GetWindowText(szBuf, MAXBYTE);
+    ConvertUserFromMail(szBuf);
+    
+    //m_strTmpBuf = szBuf;
+    BEGIN_HTTP_REQUEST
+    
+    //查看是否有5个金币===============================
+    {
+        m_pHttpReq->Open(WEB_GET, TEXT("http://mall.csdn.net/cbuy/buy_download_coin"));
+
+        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("mall.csdn.net"));
+        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_CACHE_CONTROL, TEXT("max-age=0"));
+        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, WEB_ACCEPT_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_UPGRADE, WEB_UPGRADE_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("http://mall.csdn.net/cbuy"));
+        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
+
+        Sleep(800);
+        m_pHttpReq->Send();
+
+        //获取回执信息
+        LONG statusCode = m_pHttpReq->GetStatus();
+        
+        //判断回执标志
+        if(statusCode != 200)
+        {
+            //m_InfoCtl.SetWindowText(strHtm);
+            AfxMessageBox(TEXT("网络错误或其他原因"));
+            return;
+        }
+
+        //获得回执信息
+        _variant_t varRspBody = m_pHttpReq->GetResponseBody();	
+        ULONG dataLen = varRspBody.parray->rgsabound[0].cElements;
+        char *pContentBuffer = (char *)varRspBody.parray->pvData;
+        
+        std::string strOut = "";
+        m_Assist.UnGZip((PBYTE)pContentBuffer, dataLen, strOut);
+        
+        strOut = m_Assist.UTF8ToGBK(strOut);
+        
+        //获取金币数量
+        CString strNum = TEXT("");
+        //正则取数据
+        {
+            regex expressionLT("</label><span><i>([0-9]{0,2})</i></span>");
+            regex expressionLT2("<i>([0-9]{0,2})</i>"); // 注意转义方式
+            
+            cmatch what;
+            // 如果用 regex_match 方法将需要完全匹配，
+            // 不能在字符串中找寻模式，可用于验证输入
+            if (!regex_search(strOut.c_str(), what, expressionLT))
+            {
+                OutputDebugString("第一种未匹配, 换第二种");
+                if(!regex_search(strOut.c_str(), what, expressionLT))
+                {
+                    OutputDebugString("两种均为匹配上");
+                    //continue;
+                }
+            }
+            else
+            {
+                strNum = std::string(what[1]).c_str();
+                OutputDebugString(strNum);
+            }
+
+        }//End 正则
+
+        if(strNum.IsEmpty())
+        {
+            AfxMessageBox(TEXT("正则获取Post链接失败，请通知管理员"));
+            m_InfoCtl.SetWindowText(TEXT("正则获取Post链接失败，请通知管理员"));
+            return;
+        }
+
+        //判断是否有5个金币
+        if(strNum != TEXT("5"))
+        {
+            AfxMessageBox(TEXT("账户没有5个金币，请检查是否没有设置资料或已兑换"));
+            m_InfoCtl.SetWindowText(TEXT("账户没有5个金币，请检查是否没有设置资料或已兑换"));
+            return;
+        }
+
+        m_InfoCtl.SetWindowText(TEXT("获取兑换积分页面成功!"));
+
+    }//查看是否有5个金币===============================
+
+
+    //最后Post用的Url
+    CString strPostUrl = TEXT("");
+    #define REF_BUY_COIN TEXT("http://mall.csdn.net/cbuy/buy_download_coin")
+
+    //获取兑换积分页面===============================
+    {
+        
+        CString strUrl = TEXT("");
+        strUrl.Format(TEXT("http://mall.csdn.net/cbuy/get_c_ajax?time=%d&post_number=5&c_type=download_coin"),
+                        m_Assist.GetTimer());
+
+        m_pHttpReq->Open(WEB_GET, (_bstr_t)strUrl);
+    
+        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("mall.csdn.net"));
+        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("application/json, text/javascript, */*; q=0.01"));
+        m_pHttpReq->SetRequestHeader(TEXT("X-Requested-With"), TEXT("XMLHttpRequest"));
+        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+        m_pHttpReq->SetRequestHeader(TEXT("Content-Type"), TEXT("application/json; charset=utf-8"));
+        m_pHttpReq->SetRequestHeader(WEB_REFERER, REF_BUY_COIN);
+        //m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
+
+        Sleep(800);
+        m_pHttpReq->Send();
+
+        //获取回执信息
+        LONG statusCode = m_pHttpReq->GetStatus();
+        
+        //判断回执标志
+        if(statusCode != 200)
+        {
+            //m_InfoCtl.SetWindowText(strHtm);
+            AfxMessageBox(TEXT("网络错误或其他原因"));
+            return;
+        }
+
+        //取出Body
+        string strOut;
+        m_Assist.Get_WinHttp_RspString(m_pHttpReq, strOut);
+        
+        CString strHtm = m_Assist.UTF8ToGBK(strOut).c_str();
+        
+        //获取32位数据码
+        CString strCode = TEXT("");
+        //正则取数据
+        {
+            regex expressionLT("c_type=download_coin&code=([0-9a-zA-Z]{30,35})&post_number");
+            regex expressionLT2("([0-9a-zA-Z]{30,35})"); // 注意转义方式
+            
+            cmatch what;
+            // 如果用 regex_match 方法将需要完全匹配，
+            // 不能在字符串中找寻模式，可用于验证输入
+            if (!regex_search(strOut.c_str(), what, expressionLT))
+            {
+                OutputDebugString("第一种未匹配, 换第二种");
+                if(!regex_search(strOut.c_str(), what, expressionLT))
+                {
+                    OutputDebugString("两种均为匹配上");
+                    //continue;
+                }
+            }
+            else
+            {
+                strCode = std::string(what[1]).c_str();
+                OutputDebugString(strCode);
+            }
+
+        }//End 正则
+
+        if(strCode.IsEmpty())
+        {
+            AfxMessageBox(TEXT("正则获取Post链接失败，请通知管理员"));
+            m_InfoCtl.SetWindowText(TEXT("正则获取Post链接失败，请通知管理员"));
+            return;
+        }
+
+        strPostUrl.Format(TEXT("http://mall.csdn.net/cbuy/submit_cbuy_do?c_type=download_coin&code=%s&post_number=5"),
+                            (LPCTSTR)strCode);
+
+        
+        m_InfoCtl.SetWindowText(TEXT("获取兑换积分页面成功!"));
+
+    }//获取兑换积分页面===============================
+
+    //获取兑换积分验证码===============================
+    {
+        
+        CString strUrl = TEXT("");
+        strUrl.Format(TEXT("http://mall.csdn.net/cbuy/get_v_code?r=%d"),
+                        m_Assist.GetTimer());
+
+        m_pHttpReq->Open(WEB_GET, (_bstr_t)strUrl);
+    
+        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("mall.csdn.net"));
+        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("image/webp,image/*,*/*;q=0.8"));
+        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_REFERER, REF_BUY_COIN);
+        //m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
+
+        Sleep(800);
+        m_pHttpReq->Send();
+
+        //获取回执信息
+        LONG statusCode = m_pHttpReq->GetStatus();
+        
+        //判断回执标志
+        if(statusCode != 200)
+        {
+            //m_InfoCtl.SetWindowText(strHtm);
+            AfxMessageBox(TEXT("网络错误或其他原因"));
+            return;
+        }
+
+//         //取出Body
+//         string strOut;
+//         m_Assist.Get_WinHttp_RspString(m_pHttpReq, strOut);
+//         
+//         CString strHtm = m_Assist.UTF8ToGBK(strOut).c_str();
+        
+        //获取登录Cookie================================================
+        if(!m_Assist.CookieToMap((LPCTSTR)m_strHostCookie, m_Assist.m_CookieMap))
+        {
+            AfxMessageBox(TEXT("转换Cookie失败"));
+            return;
+        }
+
+        //获取Cookie
+        CString strLoginCookie = (LPCTSTR)m_pHttpReq->GetAllResponseHeaders();
+        
+        tstring strTmpCookie = strLoginCookie;
+        m_Assist.GetCookieString(strTmpCookie, m_Assist.m_CookieMap);
+        
+        
+        strTmpCookie = TEXT("");
+        if(!m_Assist.MapToCookie(strTmpCookie, m_Assist.m_CookieMap))
+        {
+            AfxMessageBox(TEXT("获取登录 Cookie 失败"));
+            return;
+        }
+        
+        m_strHostCookie = strTmpCookie.c_str();
+        
+        m_HtmlCtl.SetWindowText(m_strHostCookie);
+
+        
+        //获取验证码数据
+        CString strGetCode = TEXT("");
+        std::string strOut = strLoginCookie;
+        //正则取数据
+        {
+            regex expressionLT("%22verify_code%22%3Bs%3A4%3A%22([a-zA-Z0-9]{3,6})%22%3B%7D");
+            regex expressionLT2("%22([a-zA-Z0-9]{3,6})%22"); // 注意转义方式
+            
+            cmatch what;
+            // 如果用 regex_match 方法将需要完全匹配，
+            // 不能在字符串中找寻模式，可用于验证输入
+            if (!regex_search(strOut.c_str(), what, expressionLT))
+            {
+                OutputDebugString("第一种未匹配, 换第二种");
+                if(!regex_search(strOut.c_str(), what, expressionLT))
+                {
+                    OutputDebugString("两种均为匹配上");
+                    //continue;
+                }
+            }
+            else
+            {
+                strGetCode = std::string(what[1]).c_str();
+                OutputDebugString(strGetCode);
+            }
+
+        }//End 正则
+
+        if(strGetCode.IsEmpty())
+        {
+            AfxMessageBox(TEXT("正则获取兑换验证码，请通知管理员"));
+            m_InfoCtl.SetWindowText(TEXT("正则获取兑换验证码，请通知管理员"));
+            return;
+        }
+
+        //http://mall.csdn.net/cbuy/submit_cbuy_do?c_type=download_coin&code=cf33d4da8010a4d802e9f326e691beb3&post_number=5&v_code=z755
+        strPostUrl = strPostUrl + TEXT("&v_code=") + strGetCode;
+
+        m_InfoCtl.SetWindowText(TEXT("获取积分验证码成功"));
+
+    }//获取兑换积分验证码===============================
+    
+    //兑换积分===============================
+    {
+        m_pHttpReq->Open(WEB_GET, (_bstr_t)strPostUrl);
+
+        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("mall.csdn.net"));
+        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, WEB_ACCEPT_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_UPGRADE, WEB_UPGRADE_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_REFERER, REF_BUY_COIN);
+        //m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        //m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
+
+        Sleep(800);
+        m_pHttpReq->Send();
+
+        //获取回执信息
+        LONG statusCode = m_pHttpReq->GetStatus();
+        
+        //判断回执标志
+        if(statusCode != 500)
+        {
+            //m_InfoCtl.SetWindowText(strHtm);
+            AfxMessageBox(TEXT("网络错误或其他原因"));
+            return;
+        }
+
+        //取出Body
+        string strOut;
+        m_Assist.Get_WinHttp_RspString(m_pHttpReq, strOut);
+        
+        CString strHtm = m_Assist.UTF8ToGBK(strOut).c_str();
+        
+        //判断是否成功
+        if(strHtm.Find(TEXT("兑换成功!")) == -1)
+        {
+            m_InfoCtl.SetWindowText(strHtm);
+            AfxMessageBox(TEXT("兑换金币到下载积分失败!"));
+            return;
+        }
+        
+        m_InfoCtl.SetWindowText(TEXT("兑换金币到下载积分成功!"));
+
+    }//兑换积分===============================
+
+    //Request结束
+    END_HTTP_REQUEST
 }
 
 void CCSDNDlg::OnBtnLogin() 
@@ -767,6 +1105,7 @@ void CCSDNDlg::OnBtnLogin()
                         strExecution.c_str(),
                         strEventId.c_str());
 
+    Sleep(800);
     m_pHttpReq->Send((_bstr_t)strPostBody);
 
     //获取回执信息
@@ -874,6 +1213,7 @@ void CCSDNDlg::OnBtnSet()
         //m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
         m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
 
+        Sleep(800);
         m_pHttpReq->Send();
 
         //获取回执信息
@@ -924,6 +1264,7 @@ void CCSDNDlg::OnBtnSet()
 
         strPostBody = TEXT("params=%7B%22skillname%22%3A%22Python%22%2C%22skilllevel%22%3A%221%22%2C%22method%22%3A%22saveSkill%22%2C%22skillid%22%3A0%7D");
 
+        Sleep(800);
         m_pHttpReq->Send((_bstr_t)strPostBody);
 
         //获取回执信息
@@ -973,6 +1314,7 @@ void CCSDNDlg::OnBtnSet()
 
         strPostBody = (TEXT("params=%7B%22method%22%3A%22saveUserContact%22%2C%22username%22%3A%22") + m_strUser + TEXT("%22%2C%22contactinfo%22%3A%5B%7B%22contactid%22%3A0%2C%22value%22%3A%22123456%22%2C%22type%22%3A70%7D%2C%7B%22contactid%22%3A0%2C%22value%22%3A%22123456%22%2C%22type%22%3A110%7D%5D%2C%22pubemail%22%3A%22123456%40qq.com%22%2C%22submobile%22%3A%2213888888888%22%7D"));
 
+        Sleep(800);
         m_pHttpReq->Send((_bstr_t)strPostBody);
 
         //获取回执信息
@@ -1022,6 +1364,7 @@ void CCSDNDlg::OnBtnSet()
 
         strPostBody = (TEXT("params=%7B%22schoolname%22%3A%22%E5%AE%B6%E9%87%8C%E8%B9%B2%22%2C%22majorstr%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22degree%22%3A%221%22%2C%22edustartdate%22%3A%222016-09-02%22%2C%22eduenddate%22%3A%22%22%2C%22eduid%22%3A%220%22%2C%22method%22%3A%22saveEduExp%22%2C%22username%22%3A%22") + m_strUser + TEXT("%22%7D"));
 
+        Sleep(800);
         m_pHttpReq->Send((_bstr_t)strPostBody);
 
         //获取回执信息
@@ -1071,6 +1414,7 @@ void CCSDNDlg::OnBtnSet()
 
         strPostBody = TEXT("params=%7B%22orgname%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22job%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22workbegindate%22%3A%222016-09-01%22%2C%22workenddate%22%3A%22%22%2C%22workdesc%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22workid%22%3A%220%22%2C%22method%22%3A%22saveWorkExp%22%2C%22username%22%3A%22") + m_strUser + TEXT("%22%7D");
 
+        Sleep(800);
         m_pHttpReq->Send((_bstr_t)strPostBody);
 
         //获取回执信息
@@ -1122,6 +1466,7 @@ void CCSDNDlg::OnBtnSet()
                       TEXT("%22%2C%22realname%22%3A%22%E5%8C%BF%E5%90%8D%22%2C%22curjob%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22gender%22%3A%221%22%2C%22birthday%22%3A%222016-9-1%22%2C%22industrytype%22%3A%22400%22%2C%22country%22%3A%221%22%2C%22province%22%3A%22110000%22%2C%22district%22%3A%22110101%22%2C%22city%22%3A%22110100%22%2C%22selfdesc%22%3A%22%E6%B2%A1%E5%95%A5%E8%AF%B4%E7%9A%84%22%2C%22method%22%3A%22saveDetailInfo%22%2C%22username%22%3A%22") +
                       m_strUser + TEXT("%22%7D");
 
+        Sleep(800);
         m_pHttpReq->Send((_bstr_t)strPostBody);
 
         //获取回执信息
@@ -1215,6 +1560,7 @@ void CCSDNDlg::OnBtnSet()
             AfxMessageBox(szBuf);
         } 
 
+        Sleep(800);
         //Post 提交头像信息
         m_pHttpReq->Send((_bstr_t)strPostBody);
 
@@ -1258,6 +1604,7 @@ void CCSDNDlg::OnBtnSet()
         //m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
         m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
 
+        Sleep(800);
         m_pHttpReq->Send();
         
         //获取回执信息
@@ -1331,26 +1678,29 @@ void CCSDNDlg::OnActiveReg(CString strUser)
         m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, TEXT("zh-CN"));
         m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("text/html, application/xhtml+xml, */*"));
 
+        Sleep(800);
         m_pHttpReq->Send();
 
         
         //POST获得临时邮箱===================================================
         m_pHttpReq->Open(WEB_POST, TEXT("https://discard.email/"));
-
-        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("text/html, application/xhtml+xml, */*"));
-        m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("https://discard.email/"));
-        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, TEXT("zh-CN"));
-        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
-        m_pHttpReq->SetRequestHeader(TEXT("Content-Type"), TEXT("application/x-www-form-urlencoded"));
-        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        
         m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("discard.email"));
         m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_CACHE_CONTROL, WEB_NO_CACHE);
+        m_pHttpReq->SetRequestHeader(WEB_CACHE_CONTROL, TEXT("max-age=0"));
+        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, WEB_ACCEPT_INFO);
+        m_pHttpReq->SetRequestHeader(TEXT("Origin"), TEXT("https://discard.email"));
+        m_pHttpReq->SetRequestHeader(WEB_UPGRADE, WEB_UPGRADE_INFO);
+        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
+        m_pHttpReq->SetRequestHeader(TEXT("Content-Type"), TEXT("application/x-www-form-urlencoded"));
+        m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("https://discard.email/"));
+        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
+        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
 
         CString strPostBody = TEXT("");
         strPostBody.Format(TEXT("LocalPart=%s&DomainType=public&DomainId=101&PrivateDomain=&Password=&LoginButton=Postfach+abrufen&CopyAndPaste=laksjdikosajo@servermaps.net+"), 
                             strUser);
-
+        Sleep(800);
         m_pHttpReq->Send((_bstr_t)strPostBody);
     
         //获取回执信息
@@ -1383,6 +1733,7 @@ void CCSDNDlg::OnActiveReg(CString strUser)
         m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
         m_pHttpReq->SetRequestHeader(WEB_CACHE_CONTROL, WEB_NO_CACHE);
 
+        Sleep(800);
         m_pHttpReq->Send();
     
         //获取回执信息
@@ -1430,6 +1781,7 @@ void CCSDNDlg::OnActiveReg(CString strUser)
         m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("discard.email"));
         m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
         
+        Sleep(800);
         m_pHttpReq->Send();
 
         //获取回执信息
@@ -1488,6 +1840,7 @@ void CCSDNDlg::OnActiveReg(CString strUser)
         m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("passport.csdn.net"));
         m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
 
+        Sleep(800);
         m_pHttpReq->Send();
 
         
@@ -1524,339 +1877,7 @@ void CCSDNDlg::OnActiveReg(CString strUser)
 
 void CCSDNDlg::OnBtnTest() 
 {
-    //判断是否已经登录，因为需要登录的Cookie
-    if(!m_bIsUserLogin)
-    {
-        AfxMessageBox(TEXT("请先登录，再设置账户信息！"));
-        return;
-    }
     
-    //获取用户名================================================
-    char szBuf[MAXBYTE] = {0};
-    m_RegUserCtl.GetWindowText(szBuf, MAXBYTE);
-    ConvertUserFromMail(szBuf);
-    
-    //m_strTmpBuf = szBuf;
-    BEGIN_HTTP_REQUEST
-    
-    //查看是否有5个金币===============================
-    {
-        m_pHttpReq->Open(WEB_GET, TEXT("http://mall.csdn.net/cbuy/buy_download_coin"));
-
-        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("mall.csdn.net"));
-        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_CACHE_CONTROL, TEXT("max-age=0"));
-        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, WEB_ACCEPT_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_UPGRADE, WEB_UPGRADE_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("http://mall.csdn.net/cbuy"));
-        m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
-        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
-
-        m_pHttpReq->Send();
-
-        //获取回执信息
-        LONG statusCode = m_pHttpReq->GetStatus();
-        
-        //判断回执标志
-        if(statusCode != 200)
-        {
-            //m_InfoCtl.SetWindowText(strHtm);
-            AfxMessageBox(TEXT("网络错误或其他原因"));
-            return;
-        }
-
-        //获得回执信息
-        _variant_t varRspBody = m_pHttpReq->GetResponseBody();	
-        ULONG dataLen = varRspBody.parray->rgsabound[0].cElements;
-        char *pContentBuffer = (char *)varRspBody.parray->pvData;
-        
-        std::string strOut = "";
-        m_Assist.UnGZip((PBYTE)pContentBuffer, dataLen, strOut);
-        
-        strOut = m_Assist.UTF8ToGBK(strOut);
-        
-        //获取金币数量
-        CString strNum = TEXT("");
-        //正则取数据
-        {
-            regex expressionLT("</label><span><i>([0-9]{0,2})</i></span>");
-            regex expressionLT2("<i>([0-9]{0,2})</i>"); // 注意转义方式
-            
-            cmatch what;
-            // 如果用 regex_match 方法将需要完全匹配，
-            // 不能在字符串中找寻模式，可用于验证输入
-            if (!regex_search(strOut.c_str(), what, expressionLT))
-            {
-                OutputDebugString("第一种未匹配, 换第二种");
-                if(!regex_search(strOut.c_str(), what, expressionLT))
-                {
-                    OutputDebugString("两种均为匹配上");
-                    //continue;
-                }
-            }
-            else
-            {
-                strNum = std::string(what[1]).c_str();
-                OutputDebugString(strNum);
-            }
-
-        }//End 正则
-
-        if(strNum.IsEmpty())
-        {
-            AfxMessageBox(TEXT("正则获取Post链接失败，请通知管理员"));
-            m_InfoCtl.SetWindowText(TEXT("正则获取Post链接失败，请通知管理员"));
-            return;
-        }
-
-        //判断是否有5个金币
-        if(strNum != TEXT("5"))
-        {
-            AfxMessageBox(TEXT("账户没有5个金币，请检查是否没有设置资料或已兑换"));
-            m_InfoCtl.SetWindowText(TEXT("账户没有5个金币，请检查是否没有设置资料或已兑换"));
-            return;
-        }
-
-        m_InfoCtl.SetWindowText(TEXT("获取兑换积分页面成功!"));
-
-    }//查看是否有5个金币===============================
-
-
-    //最后Post用的Url
-    CString strPostUrl = TEXT("");
-    #define REF_BUY_COIN TEXT("http://mall.csdn.net/cbuy/buy_download_coin")
-
-    //获取兑换积分页面===============================
-    {
-        
-        CString strUrl = TEXT("");
-        strUrl.Format(TEXT("http://mall.csdn.net/cbuy/get_c_ajax?time=%d&post_number=5&c_type=download_coin"),
-                        m_Assist.GetTimer());
-
-        m_pHttpReq->Open(WEB_GET, (_bstr_t)strUrl);
-    
-        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("mall.csdn.net"));
-        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("application/json, text/javascript, */*; q=0.01"));
-        m_pHttpReq->SetRequestHeader(TEXT("X-Requested-With"), TEXT("XMLHttpRequest"));
-        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
-        m_pHttpReq->SetRequestHeader(TEXT("Content-Type"), TEXT("application/json; charset=utf-8"));
-        m_pHttpReq->SetRequestHeader(WEB_REFERER, REF_BUY_COIN);
-        //m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
-        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
-
-        m_pHttpReq->Send();
-
-        //获取回执信息
-        LONG statusCode = m_pHttpReq->GetStatus();
-        
-        //判断回执标志
-        if(statusCode != 200)
-        {
-            //m_InfoCtl.SetWindowText(strHtm);
-            AfxMessageBox(TEXT("网络错误或其他原因"));
-            return;
-        }
-
-        //取出Body
-        string strOut;
-        m_Assist.Get_WinHttp_RspString(m_pHttpReq, strOut);
-        
-        CString strHtm = m_Assist.UTF8ToGBK(strOut).c_str();
-        
-        //获取32位数据码
-        CString strCode = TEXT("");
-        //正则取数据
-        {
-            regex expressionLT("c_type=download_coin&code=([0-9a-zA-Z]{30,35})&post_number");
-            regex expressionLT2("([0-9a-zA-Z]{30,35})"); // 注意转义方式
-            
-            cmatch what;
-            // 如果用 regex_match 方法将需要完全匹配，
-            // 不能在字符串中找寻模式，可用于验证输入
-            if (!regex_search(strOut.c_str(), what, expressionLT))
-            {
-                OutputDebugString("第一种未匹配, 换第二种");
-                if(!regex_search(strOut.c_str(), what, expressionLT))
-                {
-                    OutputDebugString("两种均为匹配上");
-                    //continue;
-                }
-            }
-            else
-            {
-                strCode = std::string(what[1]).c_str();
-                OutputDebugString(strCode);
-            }
-
-        }//End 正则
-
-        if(strCode.IsEmpty())
-        {
-            AfxMessageBox(TEXT("正则获取Post链接失败，请通知管理员"));
-            m_InfoCtl.SetWindowText(TEXT("正则获取Post链接失败，请通知管理员"));
-            return;
-        }
-
-        strPostUrl.Format(TEXT("http://mall.csdn.net/cbuy/submit_cbuy_do?c_type=download_coin&code=%s&post_number=5"),
-                            (LPCTSTR)strCode);
-
-        
-        m_InfoCtl.SetWindowText(TEXT("获取兑换积分页面成功!"));
-
-    }//获取兑换积分页面===============================
-
-    //获取兑换积分验证码===============================
-    {
-        
-        CString strUrl = TEXT("");
-        strUrl.Format(TEXT("http://mall.csdn.net/cbuy/get_v_code?r=%d"),
-                        m_Assist.GetTimer());
-
-        m_pHttpReq->Open(WEB_GET, (_bstr_t)strUrl);
-    
-        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("mall.csdn.net"));
-        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, TEXT("image/webp,image/*,*/*;q=0.8"));
-        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_REFERER, REF_BUY_COIN);
-        //m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
-        m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
-
-        m_pHttpReq->Send();
-
-        //获取回执信息
-        LONG statusCode = m_pHttpReq->GetStatus();
-        
-        //判断回执标志
-        if(statusCode != 200)
-        {
-            //m_InfoCtl.SetWindowText(strHtm);
-            AfxMessageBox(TEXT("网络错误或其他原因"));
-            return;
-        }
-
-//         //取出Body
-//         string strOut;
-//         m_Assist.Get_WinHttp_RspString(m_pHttpReq, strOut);
-//         
-//         CString strHtm = m_Assist.UTF8ToGBK(strOut).c_str();
-        
-        //获取登录Cookie================================================
-        if(!m_Assist.CookieToMap((LPCTSTR)m_strHostCookie, m_Assist.m_CookieMap))
-        {
-            AfxMessageBox(TEXT("转换Cookie失败"));
-            return;
-        }
-
-        //获取Cookie
-        CString strLoginCookie = (LPCTSTR)m_pHttpReq->GetAllResponseHeaders();
-        
-        tstring strTmpCookie = strLoginCookie;
-        m_Assist.GetCookieString(strTmpCookie, m_Assist.m_CookieMap);
-        
-        
-        strTmpCookie = TEXT("");
-        if(!m_Assist.MapToCookie(strTmpCookie, m_Assist.m_CookieMap))
-        {
-            AfxMessageBox(TEXT("获取登录 Cookie 失败"));
-            return;
-        }
-        
-        m_strHostCookie = strTmpCookie.c_str();
-        
-        m_HtmlCtl.SetWindowText(m_strHostCookie);
-
-        
-        //获取验证码数据
-        CString strGetCode = TEXT("");
-        std::string strOut = strLoginCookie;
-        //正则取数据
-        {
-            regex expressionLT("%22verify_code%22%3Bs%3A4%3A%22([a-zA-Z0-9]{3,6})%22%3B%7D");
-            regex expressionLT2("%22([a-zA-Z0-9]{3,6})%22"); // 注意转义方式
-            
-            cmatch what;
-            // 如果用 regex_match 方法将需要完全匹配，
-            // 不能在字符串中找寻模式，可用于验证输入
-            if (!regex_search(strOut.c_str(), what, expressionLT))
-            {
-                OutputDebugString("第一种未匹配, 换第二种");
-                if(!regex_search(strOut.c_str(), what, expressionLT))
-                {
-                    OutputDebugString("两种均为匹配上");
-                    //continue;
-                }
-            }
-            else
-            {
-                strGetCode = std::string(what[1]).c_str();
-                OutputDebugString(strGetCode);
-            }
-
-        }//End 正则
-
-        if(strGetCode.IsEmpty())
-        {
-            AfxMessageBox(TEXT("正则获取兑换验证码，请通知管理员"));
-            m_InfoCtl.SetWindowText(TEXT("正则获取兑换验证码，请通知管理员"));
-            return;
-        }
-
-        //http://mall.csdn.net/cbuy/submit_cbuy_do?c_type=download_coin&code=cf33d4da8010a4d802e9f326e691beb3&post_number=5&v_code=z755
-        strPostUrl = strPostUrl + TEXT("&v_code=") + strGetCode;
-
-        m_InfoCtl.SetWindowText(TEXT("获取积分验证码成功"));
-
-    }//获取兑换积分验证码===============================
-    
-    //兑换积分===============================
-    {
-        m_pHttpReq->Open(WEB_GET, (_bstr_t)strPostUrl);
-
-        m_pHttpReq->SetRequestHeader(WEB_HOST, TEXT("mall.csdn.net"));
-        m_pHttpReq->SetRequestHeader(WEB_CONNECTION, WEB_CONNECTION_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_ACCEPT, WEB_ACCEPT_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_UPGRADE, WEB_UPGRADE_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
-        m_pHttpReq->SetRequestHeader(WEB_REFERER, REF_BUY_COIN);
-        //m_pHttpReq->SetRequestHeader(WEB_ENCODE, WEB_ENCODE_GZIP);
-        //m_pHttpReq->SetRequestHeader(WEB_LANGUAGE, WEB_LANGUAGE_INFO);
-
-        m_pHttpReq->Send();
-
-        //获取回执信息
-        LONG statusCode = m_pHttpReq->GetStatus();
-        
-        //判断回执标志
-        if(statusCode != 500)
-        {
-            //m_InfoCtl.SetWindowText(strHtm);
-            AfxMessageBox(TEXT("网络错误或其他原因"));
-            return;
-        }
-
-        //取出Body
-        string strOut;
-        m_Assist.Get_WinHttp_RspString(m_pHttpReq, strOut);
-        
-        CString strHtm = m_Assist.UTF8ToGBK(strOut).c_str();
-        
-        //判断是否成功
-        if(strHtm.Find(TEXT("兑换成功!")) == -1)
-        {
-            m_InfoCtl.SetWindowText(strHtm);
-            AfxMessageBox(TEXT("兑换金币到下载积分失败!"));
-            return;
-        }
-        
-        m_InfoCtl.SetWindowText(TEXT("兑换金币到下载积分成功!"));
-
-    }//兑换积分===============================
-
-    //Request结束
-    END_HTTP_REQUEST
 }
 
 #include <shlwapi.h>
@@ -1936,7 +1957,7 @@ void CCSDNDlg::TestBaidu()
         m_pHttpReq->SetRequestHeader(WEB_REFERER, TEXT("http://passport.csdn.net/account/mobileregister?action=mobileRegister"));
         m_pHttpReq->SetRequestHeader(WEB_UA, WEB_UA_INFO);
         
-
+        Sleep(800);
         //Get方法 发送HTTP信息
         hr = m_pHttpReq->Send();
         if (FAILED(hr)) 

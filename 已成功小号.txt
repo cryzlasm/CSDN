@@ -1,13 +1,57 @@
-xeludukuzefo@spambog.com
-lCxuOp
-hSCtnL
-vWZpVP
-SqMRcl@spambog.com
-rKpOaw@spambog.com
+
+//已成功
 
 
+
+//待验证
+UlIDDv@spambog.com
+WyACrR@spambog.com
+
+//已验证
+
+
+
+
+
+//积分领取成功
+ppBjak@spambog.com
+NjwZVH@spambog.com
+jmgvGc@spambog.com
 FFENgy@spambog.com
+rKpOaw@spambog.com
+SqMRcl@spambog.com
+vWZpVP@spambog.com
+hSCtnL@spambog.com
+lCxuOp@spambog.com
+xeludukuzefo@spambog.com
+zenj1@msgos.com
+addasdsadasdasdecv@polyfaust.com
+rhhNZo@spambog.com
+EctuGB@spambog.com
+MNNccw@spambog.com
+UwiWNPuGST@spambog.com
+xzJRrcqSOG@spambog.com
+xAVOFRINhOAXyBS@spambog.com
 
-
+密码 ： 123456
 
 https://discard.email/
+
+
+
+
+0123 4567
+0000 0000
+0000 0001	1	a1
+0000 0010	2	a2
+0000 0100	4	a3
+0000 1000	8	a4
+0001 0000	10	b1
+0010 0000	20	b2
+0100 0000	40	b3
+1000 0000	80	b4
+
+b4 | a1		1000 0001
+b4 & a1		
+
+

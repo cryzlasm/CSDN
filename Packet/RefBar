@@ -1,0 +1,566 @@
+GET http://my.csdn.net/?ref=toolbar HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Referer: http://my.csdn.net/
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: uuid_tt_dd=2374975261751004143_20160831; bdshare_firstime=1474549852063; __message_district_code=420000; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1474708368,1474711667,1474893111,1474894405; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1474894405; __message_sys_msg_id=0; __message_gu_msg_id=0; __message_cnel_msg_id=0; __message_in_school=0; _ga=GA1.2.90815613.1473425003; UserName=NjwZVH; UserInfo=rB4nWEtgVide%2B4qFhcUiRCRWh65Qjv9opDwjbHlPsM5yXtKq08i3%2FlqwAa2rRCcgzhbYGcdBkOPZLiv8IchST8nJyKc4rGhW%2B0OdZgA5aikAjcYMjzPRKTMEQ9bwk2G9; UserNick=NjwZVH; AU=D6E; UN=NjwZVH; UE="NjwZVH@spambog.com"; BT=1474894445586; access-token=54c146b5-bc8f-4f44-be65-caf65069fd35; UD=%E6%B2%A1%E5%95%A5%E8%AF%B4%E7%9A%84; dc_tos=oe4506; dc_session_id=1474894431364
+
+
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:19:44 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 30295
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link href="http://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+    <link rel="stylesheet" href="/assets2/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/toolbar/css/index.css">
+    <link rel="stylesheet" href="/assets2/css/common.css">
+    <link rel="stylesheet" href="/assets2/css/jquery-ui-1.10.3.css">
+    <!-- [if IE 7]-->
+    <link rel="stylesheet" href="/assets2/css/font-awesome-ie7.min.css">
+    <!-- [endif]-->
+    <link rel="stylesheet" href="/assets2/css/persion_space_A.css">
+    <link rel="stylesheet" href="http://csdnimg.cn/mini/mini.css">
+    <script src="/assets2/js/libs/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <!-- [if lt IE 9]-->
+    <script src="/assets2/js/libs/html5shiv.min.js"></script>
+    <script src="/assets2/js/libs/flashcanvas.js"></script>
+    <!-- [endif]-->
+    <script type="text/javascript">
+      var username = 'njwzvh';     
+      var oper_username = 'njwzvh';    
+      document.domain="csdn.net";
+    </script>
+        <style>
+.csdn-toolbar .logo .img {
+    background: url("/images/f_name.png") left center no-repeat;
+    float: left;
+    height: 40px;
+    margin-left: 10px;
+    width: 120px;
+}
+.privacy{
+	font-size:14px;
+	color:#2b81a9;
+}
+.main .persional_property .person-info .person-detail  .info_null{
+	color:#e9733a;
+}
+.mod_personal_info .info li em a{
+	color:#428bca;
+}
+.mod_personal_info .info li em a:hover{
+	color:#2a6496;
+}
+.main .persional_property .person-status .status .scores em{
+	cursor:pointer ;
+}
+.main .persion_section .person_education .education_list dd em,.main .persion_section .person_job .job_list dd em{
+	display:none;
+}
+</style>
+    <title>我的CSDN</title>
+  </head>
+  <body>
+    <script id="toolbar-tpl-scriptId" skin="black" fixed="true" prod="my" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+        <script type="text/javascript">
+ 		 var protocol = window.location.protocol;
+		  document.write('<script type="text/javascript" src="' +protocol+ '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></'+'script>');
+	</script>
+ 	  	<div class="nav">
+	    <div class="nav_content">
+	        <li ><a href="/my/mycsdn">首页</a></li>
+	        <li  ><a href="http://ask.csdn.net">技术问答</a></li>
+	        <li><a href="http://lib.csdn.net" target="_blank">知识库</a></li>
+	     
+	        <li class="active"><a href="/">个人主页</a></li>
+	       <li ><a href="http://msg.csdn.net/letters">消息中心</a></li>
+	         <li ><a href="/my/score">我的C币</a></li>
+	    </div>
+	</div>
+	
+    <!-- 
+    <div id="my-nav" role="banner" class="navbar navbar-static-top">
+      <nav role="navigation" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">首页</a></li>
+          <li ><a href="/my/album">相册</a></li>
+          <li ><a href="/my/favorite">收藏</a></li>
+          <li ><a href="/my/follow">关系</a></li>
+          <li ><a href="http://msg.csdn.net/letters">私信</a></li>
+          <li ><a href="/my/feed">动态</a></li>
+     
+        </ul>
+        <div class="pull-right"><a href="https://my.csdn.net/my/account/changepwd" title="帐号设置" class="btn btn-cfg"></a></div>
+      </nav>
+    </div>
+     -->
+
+  	
+    <div class="main clearfix">
+      <div class="persional_property">
+        <div class="person_info_con"><i class="icon-edit icon-large person-info-edit"></i><a name="M_base"></a>
+          <dl class="person-photo">
+                      <dt><a href="javascript:;"><img src="http://avatar.csdn.net/D/6/E/1_njwzvh.jpg" class="header"><span class="edit_person_pic"></span></a></dt>
+            <dd class="focus_num"><b><a href='/my/follow'  target=_blank>0</a></b>关注</dd>
+            <dd class="fans_num"><b><a href='/my/fans'  target=_blank>0</a></b>粉丝</dd>
+          </dl>
+          <dl class="person-info">
+            <dt class="person-nick-name">
+            			<span>NjwZVH</span>            </dt>
+            <dd class="person-detail"> 
+            		通信(设备·运营·增值服务)<span>|</span>无无<span>|</span>匿名<span>|</span>中国-北京-东城区<span>|</span>男<span>|</span>2016-9-1 </dd>
+            <dd class="person-sign">没啥说的</dd>
+            <dd style="margin: 10px 0px"> 
+	            <div class="person-status clearfix">
+	            <div class="status"><span><a href="javascript:;" class="cb">0</a><i>币</i></span><span class="scores"  ><em class="blog"  onclick="javascript:window.open('http://blog.csdn.net/njwzvh','_blank')"  ></em><em class="download" onclick="javascript:window.open('http://download.csdn.net/my','_blank')" ></em><em class="bbs"  onclick="javascript:window.open('http://bbs.csdn.net','_blank')" ></em><em class="code" onclick="javascript:window.open('http://code.csdn.net/dashboard/index','_blank')" ></em><em class="student"  onclick="javascript:window.open('http://student.csdn.net/myclub ','_blank')" ></em><em class="ask"  onclick="javascript:window.open('http://ask.csdn.net/my ','_blank')" ></em></span><span class="medals">
+	                <div class="wraper"></div></span></div>
+	          </div>
+          </dd>
+          </dl>
+        
+        </div>
+      </div>
+      <div class="persion_section">
+        <div class="mod_product">
+          <div class="prod_fans">
+            <div style="left: 34px" nodeType="box_1" id="box_1" class="box box_1">
+              <div nodeType="ie-fans" class="IE-fans"></div>
+              <div nodeType="fanInfo" class="info level orange">V1</div><a href="http://blog.csdn.net/njwzvh" target="_blank" nodeType="fanText" class="box_title">博客</a>
+              <div class="wraper_right fanOrange">
+                <div nodeType="moveFan-right" class="fan"></div>
+              </div>
+              <div class="wraper_left fanOrange">
+                <div nodeType="moveFan-left" class="fan"></div>
+              </div>
+            </div>
+            <div style="left: 209px" nodeType="box_2" id="box_2" class="box box_2">
+              <div nodeType="ie-fans" class="IE-fans"></div>
+              <div nodeType="fanInfo" class="info level green">V1</div><a href="http://download.csdn.net/my" target="_blank" nodeType="fanText" class="box_title">下载</a>
+              <div class="wraper_right fanGreen">
+                <div nodeType="moveFan-right" class="fan"></div>
+              </div>
+              <div class="wraper_left fanGreen">
+                <div nodeType="moveFan-left" class="fan"></div>
+              </div>
+            </div>
+            <div style="left: 384px" nodeType="box_3" id="box_3" class="box box_3">
+              <div nodeType="ie-fans" class="IE-fans"></div>
+              <div nodeType="fanInfo" class="info level blue">V1</div><a href="http://bbs.csdn.net" target="_blank" nodeType="fanText" class="box_title">论坛</a>
+              <div class="wraper_right fanBlue">
+                <div nodeType="moveFan-right" class="fan"></div>
+              </div>
+              <div class="wraper_left fanBlue">
+                <div nodeType="moveFan-left" class="fan"></div>
+              </div>
+            </div>
+            <div style="left: 559px" nodeType="box_4" id="box_4" class="box box_4">
+              <div nodeType="ie-fans" class="IE-fans"></div>
+              <div nodeType="fanInfo" class="info level blueDark">V1</div><a href="https://code.csdn.net/dashboard/index" target="_blank" nodeType="fanText" class="box_title">CODE</a>
+              <div class="wraper_right fanBlueDark">
+                <div nodeType="moveFan-right" class="fan"></div>
+              </div>
+              <div class="wraper_left fanBlueDark">
+                <div nodeType="moveFan-left" class="fan"></div>
+              </div>
+            </div>
+            <div style="left: 734px" nodeType="box_5" id="box_5" class="box box_5">
+              <div nodeType="ie-fans" class="IE-fans"></div>
+              <div nodeType="fanInfo" class="info level greenDark">V1</div><a href="http://student.csdn.net/" target="_blank" nodeType="fanText" class="box_title">高校</a>
+              <div class="wraper_right fanGreenDark">
+                <div nodeType="moveFan-right" class="fan"></div>
+              </div>
+              <div class="wraper_left fanGreenDark">
+                <div nodeType="moveFan-left" class="fan"></div>
+              </div>
+            </div>
+          </div>
+          <div class="money">
+            <ul class="clearfix">
+              <li>C币<a href="#" target="_blank" class="cb">0</a></li>
+              <li>勋章<span class="medals"></span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="person_detail_tab">
+          <ul>
+            <li data-modal="tab" class="current_detail">我的资料</li>
+            <li data-modal="tab">我的动态</li>
+            <li data-modal="tab">我的关系</li>
+            <li data-modal="tab" class="lastli">我的收藏<span><img src="/assets2/images/jiantou_down.png">
+                <div id="more">
+                  <div class="xiang_ce"><a  href="#"  onclick="javascript:window.open('https://my.csdn.net/my/album','_blank')">我的相册</a></div>
+                </div></span>
+            </li>
+          </ul>
+        </div>
+        <div class="aboutMe">
+          <div nodeType="myDetails" nodeIndex="my0" data-modal="tab-layer" class="myDetails current_content">
+            <div class="mod_field_skill">
+              <div class="field">
+                <h3>熟悉的领域</h3>
+                <div class="tags clearfix">                               
+                  <div class="tag addTag">+</div>
+                </div>
+              </div>
+            </div>
+            <div class="mod_field_skill">
+              <div class="skill">
+                <h3>专业技能</h3>
+                <div class="tags clearfix">
+                 
+                  
+                  <div class="tag addTag">+</div>
+                </div>
+              </div>
+            </div>
+            <div class="person_education"><a name="M_more"></a>
+              <h3><span>教育经历</span><i class="icon-plus add-icon"></i></h3>
+              <div class="no-mess icon-th-list"><span>暂无教育经历</span></div>
+            </div>
+            <div class="person_job">
+              <h3><span>工作经历</span><i class="icon-plus add-icon"></i></h3>
+              <div class="no-mess icon-th-list"><span>暂无工作经历</span></div>
+            </div>
+            <div class="mod_contact"><a href="#" nodeType="contact-modify" class="modify icon-edit"></a>
+              <h3>联系方式   <a class="privacy" onclick="javascript:window.open('https://my.csdn.net/my/account/privacy','_blank')" href="#">仅自己可见</a></h3>
+              <ul class="clearfix">
+				  <li><i>电子邮箱：</i><span nodetype="mail" class="email  mail"></span></li>
+				  <li><i>手机号码：</i><span nodetype="mobile" class="mobile"></span></li>
+				  <li><i>QQ号码：</i><span nodetype="qq" class="qq"></span></li>
+				  <li><i>微信号：</i><span nodetype="weixin" class="weixin"></span></li>
+				</ul>
+				<!-- 
+              <ul class="clearfix">
+                <li>电子邮箱：<span nodeType="mail" class="email  mail"></span></li>
+                <li>手机号码：<span nodeType="mobile" class="mobile"></span></li>
+                <li>QQ号码：<span nodeType="qq" class="qq"></span></li>
+                <li>微信号：<span nodeType="weixin" class="weixin"></span></li>
+              </ul>
+               -->
+            </div>
+          </div>
+          <div nodeType="myNews" nodeIndex="my1" data-modal="tab-layer" class="myNews">
+            <div class="mod_per_dy">
+              <h3><a href="#" data-type="mine" class="mineTab active">我自己的<i class="icon"></i></a><span></span><a href="#" data-type="focus" class="focusTab">我关注的人<i class="icon"></i></a></h3>
+              <div class="mine">
+                <ul data-bind="my">
+                  <li><span data-bind="myTitle" class="info"></span>
+                    <div data-bind="myCont" class="cont"></div><span data-bind="myTime" class="time"></span>
+                  </li>
+                </ul>
+                <div class="more"><span class="icon-angle-down"></span><a href="#">显示更多</a></div>
+              </div>
+              <div class="focus">
+                <ul data-bind="follow">
+                  <li><span data-bind="followTitle" class="info"></span>
+                    <div data-bind="followCont" class="cont"></div><span data-bind="followTime" class="time"></span>
+                  </li>
+                </ul>
+                <div class="more"><span class="icon-angle-down"></span><a href="#">显示更多</a></div>
+              </div>
+            </div>
+          </div>
+          <div nodeType="myConnection" nodeIndex="my2" data-modal="tab-layer" class="myConnection">
+            <div class="connection_title_con">
+              <ul>
+                <li id="btnMyFocus" class="current_foucus">我关注的(0)</li>
+                <li class="interval_line"></li>
+                <li id="btnFocusMe">关注我的(0)</li>
+                <li class="interval_line"></li>
+                <li id="btnRelation">相互关注(0)</li>
+              </ul>
+              <div class="connection_search_form">
+                <form>
+                  <input id="txtSearchC" type="text" placeholder="搜索..." class="input_text">
+                  <input id="btnStartSearch" type="submit" value="" class="connection_search">
+                </form>
+              </div>
+            </div>
+            <div class="connection_list_con clearfix">
+              <ul id="myConnect" class="my_connections clearfix">
+                
+              </ul>
+              <div id="c_more" class="more"><span class="icon-angle-down"></span><a href="#">显示更多</a></div>
+            </div>
+          </div>
+          <div nodeType="myCollect" nodeIndex="my3" data-modal="tab-layer" class="myCollect">
+            <div data-bind="collect" class="mod-my-collect">
+              <div class="silder-wraper">
+                <div class="silder"><i class="active"></i>
+                  <div class="wraper">
+                    <ul data-bind="menu" class="clearfix">
+                      <li data-bind="menuItem"><em></em><span data-bind="menuText" class="J-menu"></span></li>
+                    </ul>
+                  </div>
+                </div>
+         <div class="operate clearfix"><a style="font-size:16px;color: #e9733a;" href="http://my.csdn.net/my/favorite" target="_blank">按标签查看</a><!--        <span class="right icon-caret-left none J-right"></span><span class="left icon-caret-right J-left"></span>  --></div>
+              </div>
+              <div class="silder-content">
+                <ul data-bind="list">
+                  <li id="" data-bind="ids"><span class="content"><a href="#" target="_blank" data-bind="cont"></a><em data-bind="tags" class="tags"><a href="#" data-bind="tag" class="tag"></a></em></span><span class="operate"><em data-bind="time" class="time"></em><span title="编辑" class="edit icon-edit J-edit"></span><span title="删除" class="del icon-trash J-del"></span></span></li>
+                </ul>
+                <ul class="J-more"></ul>
+              </div><a href="#" class="more">显示更多<i class="icon-angle-down"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="persion_article">
+        <div class="mod_personal_info">
+          <div class="per_info clearfix">
+            <div class="percentage"><em nodetype="percentage">0</em><span>%</span></div>
+            <div class="prog">
+              <div class="prog_bg"></div>
+              <div nodetype="prog_fg" class="prog_fg"></div>
+            </div>
+          </div>
+          <div class="money_info">
+            <div nodetype="modify" class="modify"><span class="info">完善资料 可获奖励</span><span class="money"><em class="icon-angle-left"></em><span>5</span><em class="icon"></em><span class="fix">币</span></span></div>
+            <div nodetype="perfect" class="perfect"><span class="info complate">资料完整度100% 奖励<i>5<em></em>币</i></span><a href="#" nodetype="receive" class="receive">立即领取</a></div>
+          </div>
+          <div class="info">
+            <ul>
+              <li><i class="icon-exclamation-sign"></i>个人头像：<em nodetype="atHeader">未设置</em></li>
+              <li><i class="icon-exclamation-sign"></i>基本资料：<em nodetype="atBase"><a href="#M_base">未填写完整</a></em></li>
+              <li><i class="icon-exclamation-sign"></i>详细资料：<em nodetype="atMore"><a href="#M_more">未填写完整</a></em></li>
+            </ul>
+          </div>
+        </div>
+        <div class="interested_con">
+          <h3>最近访客</h3>
+          <ul nodetype="inter-list" data-bind="list" class="clearfix">
+            <li><a href="#" target="_blank" data-bind="headerHref"><img src="" username="" data-bind="headerSrc"></a></li>
+          </ul>
+          <div class="count-and-more"><span>最近一周被访问了<em data-bind="times"></em>次</span><a href="/my/visitor/index" target="_blank">查看全部</a>
+          </div>
+        </div>
+              </div>
+      <div class="pop_edit edit_intro">
+        <h3>编辑简介</h3><a href="#" nodeType="close" class="close">×</a>
+        <div style="background: #f3f3f3; border:1px solid #DCDCDC; margin:0 10px  20px;color:#333; font-size:16px; line-height:30px; padding:0 5px;">
+        	<span>用户名 : </span><span style='color: #666666;'>njwzvh</span>
+        </div>
+        <div class="context">
+          <form id="form" nodeType="form-popup" class="form">
+            <ul>
+              <li class="mp_dl"><em class="red">*</em><span>昵称：
+                  <input name="nickname" nodeType="nickName" important="yes" type="text" placeholder="支持中文、英文、数字、_、-" maxLen="20" class="nick_name mp_field1">
+                  <!--em.nick_tip 昵称已被使用，请重新输入。--></span><span nodeType="realName" class="realName mp_label">实名：
+                  <input name="realname" nodeType="userName" type="text" maxLen="15" class="user_name mp_field2"><i class="mp_em_i">已认证</i></span><a href="https://my.csdn.net/my/account/privacy"  class="privacy"  target="_blank" >仅自己可见</a></li>
+              <li><span>职位：
+                  <input name="curjob" nodeType="job" type="text" maxLen="20" class="job mp_field1"></span><span class="mp_label">性别：
+                  <input name="gender" type="radio" value="1" class="radio_sex">男
+                  <input name="gender" type="radio" value="2" class="radio_sex">女</span></li>
+              <li><span>生日：
+                  <input name="birthday" nodeType="birthday" type="text" onClick="WdatePicker()" class="birthday Wdate mp_field1"></span><span>行业：
+                  <select name="industrytype" class="industry">
+                    <option value="0">选择行业</option>
+                  </select></span></li>
+              <li class="region">地区：
+                <select name="country" type="region" class="country">
+                  <option value="0">国家</option>
+                </select>
+                <select name="province" type="region" class="prov">
+                  <option value="0">省级</option>
+                </select>
+                <select name="city" type="region" class="city">
+                  <option value="0">市级</option>
+                </select>
+                <select name="district" type="region" class="district">
+                  <option value="0"></option>
+                </select>
+              </li>
+              <li>简述：
+                <textarea name="selfdesc" nodetype="selfdesc"  placeholder="300字以内" maxLen="300" class="intro_info mp_wid" style="width:560px"></textarea>
+                <span class="info-alert">您还可以输入<em>300</em>个字符</span>
+              </li>
+            </ul>
+          </form>
+        </div>
+        <div class="success"><a href="#" nodeType="cancel" class="cancel">取消</a><a href="#" nodeType="ok" class="ok">保存</a></div>
+      </div>
+      <div class="pop_edit edit_edu">
+        <h3>编辑教育经历</h3><a href="#" nodeType="close" class="close">×</a>
+        <div class="context">
+          <form id="form" nodeType="form-popup" class="form">
+            <ul>
+              <li>学校：<em class="red">*</em>
+                <input name="schoolname" nodeType="school" important="yes" type="text" maxLen="20" class="school">
+              </li>
+              <li><em class="red">*</em><span>专业：
+                  <input name="majorstr" nodeType="pro" important="yes" type="text" maxLen="20" class="pro"></span><span>学历：
+                  <select name="degree" nodeType="edu" class="edu">
+                    <option value="1">中专</option>
+                    <option value="2">大专</option>
+                    <option value="3">本科</option>
+                    <option value="4">硕士</option>
+                    <option value="5">MBA</option>
+                    <option value="6">博士</option>
+                    <option value="7">博士后</option>
+                    <option value="-15">初中</option>
+                    <option value="-10">高中</option>
+                    <option value="-5">中技</option>
+                  </select></span></li>
+              <li><em class="red">*</em><span style="padding-right: 0 ">时间：
+                  <input id="edustartdate" name="edustartdate" nodeType="date" important="yes" type="text" onClick="WdatePicker({maxDate:'#F{$dp.$D(\'eduenddate\')}'})" readonly="readonly" class="date Wdate"></span><span class="time">-</span>
+                <input id="eduenddate" name="eduenddate" nodeType="date" important="yes" type="text" onClick="WdatePicker({minDate:'#F{$dp.$D(\'edustartdate\')}'})" readonly="readonly" class="date Wdate">
+                <input name="now" nodeType="now" type="checkbox" class="now"><i>现在</i>
+              </li>
+            </ul>
+          </form>
+        </div>
+        <div class="success"><a href="#" nodeType="cancel" class="cancel">取消</a><a href="#" nodeType="ok" class="ok">保存</a></div>
+      </div>
+      <div class="pop_edit edit_job">
+        <h3>编辑工作经历</h3><a href="#" nodeType="close" class="close">×</a>
+        <div class="context">
+          <form id="form" nodeType="form-popup" class="form">
+            <ul>
+              <li><em class="red">*</em><span>单位：
+                  <input name="orgname" nodeType="school" important="yes" type="text" maxLen="20" class="school"></span></li>
+              <li><em class="red">*</em><span>职位：
+                  <input name="job" nodeType="job" type="text" maxLen="20" important="yes" class="job"></span></li>
+              <li><em class="red">*</em><span style="padding-right: 0">时间：
+                  <input id="workbegindate" name="workbegindate" nodeType="date" important="yes" type="text" onClick="WdatePicker({maxDate:'#F{$dp.$D(\'workenddate\')}'})" readonly="readonly" class="date Wdate"></span><span class="time">-</span>
+                <input id="workenddate" name="workenddate" nodeType="date" important="yes" type="text" onClick="WdatePicker({minDate:'#F{$dp.$D(\'workbegindate\')}'})" readonly="readonly" class="date Wdate">
+                <input name="now" nodeType="now" type="checkbox" class="now"><i>现在</i>
+              </li>
+              <li><em style="margin-top: -65px" class="red">*</em><span>简述：
+                  <textarea name="workdesc" important="yes" placeholder="300字以内" maxLen="300" class="intro_info"></textarea></span><span class="textara_Mes"></span></li>
+            </ul>
+          </form>
+        </div>
+        <div class="success"><a href="#" nodeType="cancel" class="cancel">取消</a><a href="#" nodeType="ok" class="ok">保存</a></div>
+      </div>
+      <div class="pop_edit edit_contact">
+        <h3>编辑联系方式   <a href="https://my.csdn.net/my/account/privacy"  class="privacy"  target="_blank" >仅自己可见</a></h3><a href="#" nodeType="close" class="close">×</a>
+        <div class="context">
+          <form id="form" nodeType="form-popup" class="form">
+            <ul>
+              <li>电子邮箱：
+                <input name="mail" nodeType="mail" type="email" class="mail">
+              </li>
+              <li>手机号码：
+                <input name="mobile" nodeType="mobile"  type="text" class="mobile">
+              </li>
+              <li>QQ号码：
+                <input name="qq" nodeType="qq" type="text" class="qq">
+              </li>
+              <li>微信号：
+                <input name="weixin" nodeType="weixin" type="text" class="weixin">
+              </li>
+            </ul>
+          </form>
+        </div>
+        <div class="success"><a href="#" nodeType="cancel" class="cancel">取消</a><a href="#" nodeType="ok" class="ok">保存</a></div>
+      </div>
+      <div class="pop_edit add_fields">
+        <h3>新增我熟悉的领域</h3><a href="#" nodeType="close" class="close">×</a>
+        <div class="context">
+          <form id="form" nodeType="form-popup" class="form">
+            <input name="areaname" nodeType="add-fields" type="text" maxLen="10" class="fields">
+          </form>
+        </div>
+        <div class="success"><a href="#" nodeType="cancel" class="cancel">取消</a><a href="#" nodeType="ok" class="ok">保存</a></div>
+      </div>
+      <div class="pop_edit add_pro">
+        <h3>新增专业技能</h3><a href="#" nodeType="close" class="close">×</a>
+        <div class="context">
+          <form id="form" nodeType="form-popup" class="form">
+            <input name="skillname" nodeType="add-pro" type="text" maxLen="10" class="pro">
+            <select name="skilllevel" nodeType="add-stars" class="add_stars">
+              <option value="0">选择星级</option>
+              <option value="1">1星</option>
+              <option value="2">2星</option>
+              <option value="3">3星</option>
+              <option value="4">4星</option>
+              <option value="5">5星</option>
+            </select>
+          </form>
+        </div>
+        <div class="success"><a href="#" nodeType="cancel" class="cancel">取消</a><a href="#" nodeType="ok" class="ok">保存</a></div>
+      </div>
+      <div class="pop_edit edit_header">
+        <div class="context">
+          <form id="form" nodeType="form-popup" class="form" method="post" enctype="multipart/form-data">
+            <a href="#" class="change"><span class="icon-picture"></span>选择照片
+              <input id="file" type="file" name="tmp_avatar_file" class="file">
+            </a>
+            <div class="des">仅支持JPG,GIF,PNG格式;文件小于5M</div>
+            <div class="headers clearfix">
+              <div id="big" nodetype="big" style="position: relative; line-height: 0" class="big"></div>
+              <div class="pic">
+                <div nodetype="multiImage" class="p150 multiImage"></div><span>150 X 150</span>
+              </div>
+              <div class="pic">
+                <div nodetype="multiImage" class="p75 multiImage"></div><span>75 X 75</span>
+              </div>
+              <div class="pic">
+                <div nodetype="multiImage" class="p50 multiImage"></div><span>50 X 50</span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="success"><a href="#" nodeType="editHeader-cancel" class="cancel editHeader-cancel">取消</a><a href="#" nodeType="editHeader-ok" class="ok editHeader-ok">保存</a></div>
+      </div>
+      <div class="pop_edit del_confirm">
+        <h3>确认删除</h3><a href="#" nodeType="close" class="close">×</a>
+        <div class="context">
+          <form id="form" nodeType="form-popup" class="form">
+            <div class="del_content">您确认删除此信息吗？</div>
+          </form>
+        </div>
+        <div class="success"><a href="#" nodeType="cancel" class="cancel">取消</a><a href="#" nodeType="del" class="ok">确认</a></div>
+      </div>
+      <div class="pop_edit edit-myCollect">
+        <h3>编辑收藏</h3><a href="#" nodeType="close" class="close">×</a>
+        <div class="context">
+          <form id="form" nodeType="form-popup" class="form">
+            <ul>
+              <li>
+                <input type="hidden" name="id"><em>*</em>网址：
+                <input type="text" name="url">
+              </li>
+              <li><em>*</em>标题：
+                <input type="text" name="title">
+              </li>
+              <li>标签：
+                <input type="text" placeholder="多个标签用逗号或空格间隔" name="txt_tag">
+              </li>
+            </ul>
+          </form>
+        </div>
+        <div class="success"><a href="#" nodeType="cancel" class="cancel">取消</a><a href="#" nodeType="ok" class="ok">保存</a></div>
+      </div>
+    </div>
+    <script type="text/javascript" src="http://csdnimg.cn/pubfooter/js/publib_footer.js"></script>
+    <script type="text/javascript" src="http://c.csdnimg.cn/public/common/toolbar/js/toolbar.js"></script>
+    <script src="/assets2/js/libs/jquery-ui-1.10.3.min.js"></script>
+    <script src="/assets2/js/libs/jquery.form.js" type="text/javascript"></script>
+    <script src="/assets2/js/libs/jquery-migrate-1.2.1.js" type="text/javascript"></script>
+    <script src="/assets2/js/libs/transparency.min.js" type="text/javascript"></script>
+    <script src="/assets2/js/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+
+    <script src="/assets2/js/libs/jquery.autocomplete.js" type="text/javascript"></script>
+    <script src="/assets2/js/libs/screen_shot.js"></script>
+    <script data-main="/assets2/js/config.mySpace.A.js" src="/assets2/js/libs/require.js"></script>
+        <script src="http://csdnimg.cn//mini/mini.js"></script>
+	<script>
+	    showMini(".my_connections");
+	</script>
+  </body>
+</html>

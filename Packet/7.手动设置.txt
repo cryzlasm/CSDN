@@ -1,0 +1,168 @@
+//打开主页，获得Cookie
+
+//获取验证码
+
+//登录获取Cookie
+rhhNZo@spambog.com
+
+
+//COOKIE
+Cookie: AU=DAF; BT=1474896312174; CASTGC=TGT-23898-NI3ALftJJCmyMQbCrrV313sWOgcaCLU9iXT4gd793G3ZzTYgWv-passport.csdn.net; UE="rhhNZo@spambog.com"; UN=rhhNZo; UserInfo=UMfxeSO0PqzJDLwYF2%2FUyVuPScCp5L3I4OqnWPHNRCXcLGRG1I6PI7wDhvrbUJb0PqgjoaQrreHGFlwor7L%2B6VjXw4ZTrQKqg8o06k0TfcmrTkIM4g7nYd4JXxC%2Fp0Fp; UserName=rhhNZo; UserNick=rhhNZo; access-token=4ea11db4-981a-4254-96bf-b71f0d2c3243
+
+//===========================================
+//设置信息添加头像	PASS
+
+//===========================================
+//设置熟悉领域
+GET http://my.csdn.net/service/main/do_add_knownarea?areaname=Python HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Accept: application/json, text/javascript, */*; q=0.01
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Referer: http://my.csdn.net/?ref=toolbar
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: AU=DAF; BT=1474896312174; CASTGC=TGT-23898-NI3ALftJJCmyMQbCrrV313sWOgcaCLU9iXT4gd793G3ZzTYgWv-passport.csdn.net; UE="rhhNZo@spambog.com"; UN=rhhNZo; UserInfo=UMfxeSO0PqzJDLwYF2%2FUyVuPScCp5L3I4OqnWPHNRCXcLGRG1I6PI7wDhvrbUJb0PqgjoaQrreHGFlwor7L%2B6VjXw4ZTrQKqg8o06k0TfcmrTkIM4g7nYd4JXxC%2Fp0Fp; UserName=rhhNZo; UserNick=rhhNZo; access-token=4ea11db4-981a-4254-96bf-b71f0d2c3243
+
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:37:49 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 45
+
+{"err":0,"msg":"ok","result":{"id":10593532}}
+
+//===========================================
+//设置专业技能
+POST http://my.csdn.net/service/main/uc HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Content-Length: 125
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://my.csdn.net
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://my.csdn.net/?ref=toolbar
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: AU=DAF; BT=1474896312174; CASTGC=TGT-23898-NI3ALftJJCmyMQbCrrV313sWOgcaCLU9iXT4gd793G3ZzTYgWv-passport.csdn.net; UE="rhhNZo@spambog.com"; UN=rhhNZo; UserInfo=UMfxeSO0PqzJDLwYF2%2FUyVuPScCp5L3I4OqnWPHNRCXcLGRG1I6PI7wDhvrbUJb0PqgjoaQrreHGFlwor7L%2B6VjXw4ZTrQKqg8o06k0TfcmrTkIM4g7nYd4JXxC%2Fp0Fp; UserName=rhhNZo; UserNick=rhhNZo; access-token=4ea11db4-981a-4254-96bf-b71f0d2c3243
+
+params=%7B%22skillname%22%3A%22Python%22%2C%22skilllevel%22%3A%221%22%2C%22method%22%3A%22saveSkill%22%2C%22skillid%22%3A0%7D
+
+
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:41:32 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 50
+
+{"err":0,"msg":"ok","result":{"skillid":34643700}}
+
+//===========================================
+//设置联系方式
+POST http://my.csdn.net/service/main/uc HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://my.csdn.net
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://my.csdn.net/?ref=toolbar
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: AU=DAF; BT=1474896312174; CASTGC=TGT-23898-NI3ALftJJCmyMQbCrrV313sWOgcaCLU9iXT4gd793G3ZzTYgWv-passport.csdn.net; UE="rhhNZo@spambog.com"; UN=rhhNZo; UserInfo=UMfxeSO0PqzJDLwYF2%2FUyVuPScCp5L3I4OqnWPHNRCXcLGRG1I6PI7wDhvrbUJb0PqgjoaQrreHGFlwor7L%2B6VjXw4ZTrQKqg8o06k0TfcmrTkIM4g7nYd4JXxC%2Fp0Fp; UserName=rhhNZo; UserNick=rhhNZo; access-token=4ea11db4-981a-4254-96bf-b71f0d2c3243
+
+params=%7B%22method%22%3A%22saveUserContact%22%2C%22username%22%3A%22njwzvh%22%2C%22contactinfo%22%3A%5B%7B%22contactid%22%3A0%2C%22value%22%3A%22123456%22%2C%22type%22%3A70%7D%2C%7B%22contactid%22%3A0%2C%22value%22%3A%22123456%22%2C%22type%22%3A110%7D%5D%2C%22pubemail%22%3A%22123456%40qq.com%22%2C%22submobile%22%3A%2213888888888%22%7D
+
+
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:44:04 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 20
+
+{"err":0,"msg":"ok"}
+
+
+//===========================================
+//设置教育经历    暂未成功
+POST http://my.csdn.net/service/main/uc HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://my.csdn.net
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://my.csdn.net/?ref=toolbar
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: AU=DAF; BT=1474896312174; CASTGC=TGT-23898-NI3ALftJJCmyMQbCrrV313sWOgcaCLU9iXT4gd793G3ZzTYgWv-passport.csdn.net; UE="rhhNZo@spambog.com"; UN=rhhNZo; UserInfo=UMfxeSO0PqzJDLwYF2%2FUyVuPScCp5L3I4OqnWPHNRCXcLGRG1I6PI7wDhvrbUJb0PqgjoaQrreHGFlwor7L%2B6VjXw4ZTrQKqg8o06k0TfcmrTkIM4g7nYd4JXxC%2Fp0Fp; UserName=rhhNZo; UserNick=rhhNZo; access-token=4ea11db4-981a-4254-96bf-b71f0d2c3243
+
+params=%7B%22schoolname%22%3A%22%E5%AE%B6%E9%87%8C%E8%B9%B2%22%2C%22majorstr%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22degree%22%3A%221%22%2C%22edustartdate%22%3A%222016-09-02%22%2C%22eduenddate%22%3A%22%22%2C%22eduid%22%3A%220%22%2C%22method%22%3A%22saveEduExp%22%2C%22username%22%3A%22rhhnzo%22%7D
+
+需要设置用户名，倒数2位
+
+
+HTTP/1.1 200 OK
+Server: openresty
+Date: Mon, 26 Sep 2016 13:57:22 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Keep-Alive: timeout=20
+Vary: Accept-Encoding
+Vary: Accept-Encoding
+Content-Length: 47
+
+{"err":0,"msg":"ok","result":{"eduid":1469372}}
+
+//===========================================
+//设置工作经历
+POST http://my.csdn.net/service/main/uc HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://my.csdn.net
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://my.csdn.net/?ref=toolbar
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: AU=DAF; BT=1474896312174; CASTGC=TGT-23898-NI3ALftJJCmyMQbCrrV313sWOgcaCLU9iXT4gd793G3ZzTYgWv-passport.csdn.net; UE="rhhNZo@spambog.com"; UN=rhhNZo; UserInfo=UMfxeSO0PqzJDLwYF2%2FUyVuPScCp5L3I4OqnWPHNRCXcLGRG1I6PI7wDhvrbUJb0PqgjoaQrreHGFlwor7L%2B6VjXw4ZTrQKqg8o06k0TfcmrTkIM4g7nYd4JXxC%2Fp0Fp; UserName=rhhNZo; UserNick=rhhNZo; access-token=4ea11db4-981a-4254-96bf-b71f0d2c3243
+
+params=%7B%22orgname%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22job%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22workbegindate%22%3A%222016-09-01%22%2C%22workenddate%22%3A%22%22%2C%22workdesc%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22workid%22%3A%220%22%2C%22method%22%3A%22saveWorkExp%22%2C%22username%22%3A%22rhhNZo%22%7D
+
+//===========================================
+//设置基本信息
+POST http://my.csdn.net/service/main/uc HTTP/1.1
+Host: my.csdn.net
+Connection: keep-alive
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://my.csdn.net
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://my.csdn.net/?ref=toolbar
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8
+Cookie: AU=DAF; BT=1474896312174; CASTGC=TGT-23898-NI3ALftJJCmyMQbCrrV313sWOgcaCLU9iXT4gd793G3ZzTYgWv-passport.csdn.net; UE="rhhNZo@spambog.com"; UN=rhhNZo; UserInfo=UMfxeSO0PqzJDLwYF2%2FUyVuPScCp5L3I4OqnWPHNRCXcLGRG1I6PI7wDhvrbUJb0PqgjoaQrreHGFlwor7L%2B6VjXw4ZTrQKqg8o06k0TfcmrTkIM4g7nYd4JXxC%2Fp0Fp; UserName=rhhNZo; UserNick=rhhNZo; access-token=4ea11db4-981a-4254-96bf-b71f0d2c3243
+
+params=%7B%22nickname%22%3A%22rhhNZo%22%2C%22realname%22%3A%22%E5%8C%BF%E5%90%8D%22%2C%22curjob%22%3A%22%E6%97%A0%E6%97%A0%22%2C%22gender%22%3A%221%22%2C%22birthday%22%3A%222016-9-1%22%2C%22industrytype%22%3A%22400%22%2C%22country%22%3A%221%22%2C%22province%22%3A%22110000%22%2C%22district%22%3A%22110101%22%2C%22city%22%3A%22110100%22%2C%22selfdesc%22%3A%22%E6%B2%A1%E5%95%A5%E8%AF%B4%E7%9A%84%22%2C%22method%22%3A%22saveDetailInfo%22%2C%22username%22%3A%22rhhNZo%22%7D
+
+//===========================================
